@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class LaneController : MonoBehaviour
 {
-
     public class Lane
     {
         public List<GameObject> laneSegments = new List<GameObject>();
@@ -19,7 +18,12 @@ public class LaneController : MonoBehaviour
     public List<LevelSegment> LevelSegments { get { return levelSegments; } }
 
     [SerializeField]
-    GameObject laneSegmentPreFab;
+    private GameObject laneSegmentPreFab = null;
+
+    [SerializeField]
+    private Player mPlayer = null;
+
+    
 
     private Renderer render;
 
@@ -37,16 +41,39 @@ public class LaneController : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Lane lane = levelSegments[levelSegments.Count - 1].lanes[0];
-            Vector3 startPosition = lane.laneSegments[lane.laneSegments.Count - 1].transform.position + (Vector3.forward * (laneLength * 0.5f));
-            GenerateLaneSegment(startPosition);
-        }
-
+        GenerateLane(mPlayer.gameObject);
     }
 
-    void GenerateLaneSegment(Vector3 startPosition)
+
+    float mCurrentPos = 0.0f;
+
+    public void GenerateLane(GameObject player)
+    {
+        mCurrentPos = player.transform.position.z;
+        Lane lane = levelSegments[levelSegments.Count - 1].lanes[0];
+        float lanePos = lane.laneSegments[lane.laneSegments.Count - 1].transform.position.z;
+
+        if (mCurrentPos > (lanePos * 0.75f))
+        {
+            Vector3 startPosition = lane.laneSegments[lane.laneSegments.Count - 1].transform.position + (Vector3.forward * (laneLength * 0.5f));
+            GenerateLaneSegment(startPosition);
+           // DestroyOldLanes();
+        }
+    }
+
+    private void DestroyOldLanes()
+    {
+        int numberOfLanes = 3;
+        int laneSegments = 3;
+        for (int i = 0; i < numberOfLanes*laneSegments; ++i)
+        {
+            Lane lane = LevelSegments[i].lanes[i];
+            
+            Destroy(lane.laneSegments[i]);
+        }
+    }
+
+    private void GenerateLaneSegment(Vector3 startPosition)
     {
         int numberOfLanes = 3;
         int laneSegments = 3;
@@ -68,8 +95,10 @@ public class LaneController : MonoBehaviour
             lanes.Add(lane);
         }
 
-        LevelSegment levelSegment = new LevelSegment();
-        levelSegment.lanes = lanes;
+        LevelSegment levelSegment = new LevelSegment
+        {
+            lanes = lanes
+        };
         levelSegments.Add(levelSegment);
     }
 }

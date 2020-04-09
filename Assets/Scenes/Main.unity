@@ -241,7 +241,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c13cf40234a23da45b4b4b6eb32e1eaf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 1
+  speed: 10
 --- !u!4 &388771206
 Transform:
   m_ObjectHideFlags: 0
@@ -446,6 +446,51 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   follow: {fileID: 388771206}
   cameraOffSet: {x: 0, y: 1, z: -10}
+--- !u!1 &1381256223
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1381256224}
+  - component: {fileID: 1381256225}
+  m_Layer: 0
+  m_Name: CollectablesController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1381256224
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1381256223}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1381256225
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1381256223}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f62b2bfcf32998046861da220a6b2fed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mCollectable: {fileID: 7862523956919075282, guid: 400e57ccd9870594aa95bb4fdf642197,
+    type: 3}
 --- !u!1 &1433255636
 GameObject:
   m_ObjectHideFlags: 0
@@ -477,6 +522,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   laneSegmentPreFab: {fileID: 2220773094914370677, guid: 011ad3dbd6ef9384f96fe215e86ea5c2,
     type: 3}
+  mPlayer: {fileID: 388771205}
 --- !u!4 &1433255638
 Transform:
   m_ObjectHideFlags: 0
