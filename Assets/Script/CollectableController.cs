@@ -1,20 +1,14 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class CollectableController : MonoBehaviour
 {
     [SerializeField]
-    private GameObject mCollectable;
+    private GameObject mCollectables;
 
-    void Start()
+    public void GenerateCollectables(Vector3 position)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        GameObject obstacles = Instantiate(mCollectables);
+        float randomPosZ = position.z + Random.Range(0.0f, 30.0f);
+        obstacles.transform.position += new Vector3(position.x, obstacles.transform.position.y, position.z + randomPosZ);
     }
 }

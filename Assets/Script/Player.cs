@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -19,6 +18,7 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        transform.position = new Vector3(lanes[mSwitchLanes].laneSegments[0].transform.position.x, transform.position.y, transform.position.z);
         transform.position += transform.forward * Time.deltaTime * speed;
 
         if (Input.GetKeyDown(KeyCode.LeftArrow))
@@ -26,7 +26,6 @@ public class Player : MonoBehaviour
             if (mSwitchLanes > 0)
             {
                 mSwitchLanes--;
-                transform.position = lanes[mSwitchLanes].laneSegments[0].transform.position;
             }
 
         }
@@ -35,9 +34,8 @@ public class Player : MonoBehaviour
             if (mSwitchLanes < lanes.Count - 1)
             {
                 mSwitchLanes++;
-                transform.position = lanes[mSwitchLanes].laneSegments[0].transform.position;
             }
         }
-
     }
+
 }

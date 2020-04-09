@@ -4,6 +4,18 @@ using UnityEngine;
 
 public class LaneController : MonoBehaviour
 {
+    [SerializeField]
+    private GameObject laneSegmentPreFab = null;
+
+    [SerializeField]
+    private Player mPlayer = null;
+
+    [SerializeField]
+    private ObstacleController mObstacleController = null;
+
+    [SerializeField]
+    private CollectableController mCollectableController = null;
+
     public class Lane
     {
         public List<GameObject> laneSegments = new List<GameObject>();
@@ -14,16 +26,8 @@ public class LaneController : MonoBehaviour
         public List<Lane> lanes = new List<Lane>();
     }
 
-    private List<LevelSegment> levelSegments = new List<LevelSegment>();
+    private readonly List<LevelSegment> levelSegments = new List<LevelSegment>();
     public List<LevelSegment> LevelSegments { get { return levelSegments; } }
-
-    [SerializeField]
-    private GameObject laneSegmentPreFab = null;
-
-    [SerializeField]
-    private Player mPlayer = null;
-
-    
 
     private Renderer render;
 
@@ -59,6 +63,8 @@ public class LaneController : MonoBehaviour
             GenerateLaneSegment(startPosition);
            // DestroyOldLanes();
         }
+
+
     }
 
     private void DestroyOldLanes()
@@ -91,6 +97,8 @@ public class LaneController : MonoBehaviour
                 laneSegment.transform.position += Vector3.forward * laneLength * z;
                 laneSegment.transform.position += Vector3.forward * laneLength * 0.5f;
                 lane.laneSegments.Add(laneSegment);
+                mObstacleController.GenerateObstacles(laneSegment.transform.position);
+                mCollectableController.GenerateCollectables(laneSegment.transform.position);
             }
             lanes.Add(lane);
         }
