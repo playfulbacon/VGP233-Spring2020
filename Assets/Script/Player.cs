@@ -5,17 +5,20 @@ public class Player : MonoBehaviour
 {
     [Header("Properties")]
     [SerializeField]
-    private float mSpeed = 15f;
+    public float speed = 15f;
 
     [SerializeField]
-    private ScoreManager mScoreManager = null;
+    public ScoreManager scoreManager = null;
+
+    private PowerUpController mPowerUpController = null;
 
     private List<LaneController.Lane> lanes;
 
     private int mSwitchLanes = 0;
     void Start()
     {
-        mScoreManager = FindObjectOfType<ScoreManager>();
+        scoreManager = FindObjectOfType<ScoreManager>();
+        mPowerUpController = FindObjectOfType<PowerUpController>();
 
         lanes = FindObjectOfType<LaneController>().LevelSegments[0].lanes;
         transform.position = lanes[lanes.Count >> 1].laneSegments[0].transform.position;
@@ -47,15 +50,16 @@ public class Player : MonoBehaviour
         }
 
         transform.position = new Vector3(lanes[mSwitchLanes].laneSegments[0].transform.position.x, transform.position.y, transform.position.z);
-        transform.position += transform.forward * Time.deltaTime * mSpeed;
+        transform.position += transform.forward * Time.deltaTime * speed;
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Collectable"))
         {
-            mScoreManager.UpdatePickUpCoins();
-            Destroy(other);
+            scoreManager.UpdatePickUpCoins();
+            mPowerUpController.ActivePowerUp(this);
+            Destroy(other.gameObject);
         }
     }
 

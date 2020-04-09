@@ -6,7 +6,7 @@ public class ScoreManager : MonoBehaviour
     [SerializeField]
     private Text mText = null;
 
-    int count = 0;
+    public int count = 0;
 
     void Start()
     {
