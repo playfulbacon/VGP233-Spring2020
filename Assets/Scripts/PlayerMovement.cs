@@ -16,7 +16,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Awake()
     {
-        List<LaneController.Lane> lanes = FindObjectOfType<LaneController>().LevelSegments[0].lanes;
+        List<LaneController.Lane> lanes = FindObjectOfType<LaneController>().propLevelSegments[0].lanes;
         //sets player position to middle lane (Had to offset quad by -3.5 units though)
         transform.position = lanes[lanes.Count / 2].laneSegments[0].transform.position;
     }
@@ -37,7 +37,7 @@ public class PlayerMovement : MonoBehaviour
                 currentlane = 0; 
         }
         Vector3 targetPosition = transform.position.z * transform.forward + transform.position.y * transform.up;
-        Debug.Log(targetPosition);
+       // Debug.Log(targetPosition);
 
         //Left most lane then move player to the left
         if (currentlane == 0)

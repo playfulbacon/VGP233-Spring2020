@@ -7,7 +7,7 @@ public class Player : MonoBehaviour
     
     void Start()
     {
-        List<LaneController.Lane> lanes = FindObjectOfType<LaneController>().LevelSegments[0].lanes;
+        List<LaneController.Lane> lanes = FindObjectOfType<LaneController>().propLevelSegments[0].lanes;
         transform.position = lanes[lanes.Count / 2].laneSegments[0].transform.position;
         Debug.Log(transform.position);
     }

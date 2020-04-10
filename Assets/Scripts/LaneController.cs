@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class LaneController : MonoBehaviour
 {
+
     [System.Serializable]
     public class Lane
     {
@@ -16,15 +17,18 @@ public class LaneController : MonoBehaviour
         public List<Lane> lanes = new List<Lane>();
     }
 
-    private List<LevelSegment> levelSegments = new List<LevelSegment>();
-    public List<LevelSegment> LevelSegments { get { return levelSegments; } }
+    private List<LevelSegment> listlevelSegments = new List<LevelSegment>();
+    public List<LevelSegment> propLevelSegments { get { return listlevelSegments; } }
 
     [SerializeField]
     GameObject laneSegmentPrefab;
-
+    public Transform playerTransform;
     private Renderer rend;
     private float laneWidth = 2f;
     private float laneLength = 10f;
+    [SerializeField]
+    private float generateOffset = 2.5f;
+    int segmentIndex = 0;
 
     void Awake()
     {
@@ -37,12 +41,34 @@ public class LaneController : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        Lane lane = listlevelSegments[listlevelSegments.Count - 1].lanes[0];
+        if (playerTransform.position.z  > lane.laneSegments[lane.laneSegments.Count - 1].transform.position.z - laneLength * 3)
         {
-            Lane lane = levelSegments[levelSegments.Count - 1].lanes[0];
-            Vector3 startPosition = lane.laneSegments[lane.laneSegments.Count - 1].transform.position + (Vector3.forward * laneLength/2);
+            Vector3 startPosition = lane.laneSegments[lane.laneSegments.Count - 1].transform.position + (Vector3.forward * laneLength / 2);
+            GenerateLevelSegment(startPosition);
+            if (playerTransform.position.z - laneLength * 3 > listlevelSegments[segmentIndex].lanes[0].laneSegments[0].transform.position.z)
+            {
+                DeleteLevelSegment(segmentIndex);
+                segmentIndex++;
+            }
+        }
+
+        //if (playerTransform.position.z - laneLength > lane.laneSegments[lane.laneSegments.Count - 1].transform.position.z)
+        //{
+        //    Vector3 startPosition = lane.laneSegments[lane.laneSegments.Count - 1].transform.position + (Vector3.forward * laneLength / 2);
+        //    GenerateLevelSegment(startPosition);
+        //    DeleteLevelSegment(segmentIndex);
+        //    segmentIndex++;
+        //}
+
+        ////Debug
+            if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Vector3 startPosition = lane.laneSegments[lane.laneSegments.Count - 1].transform.position + (Vector3.forward * laneLength / 2);
             GenerateLevelSegment(startPosition);
         }
+        Debug.Log("Player Transform Z: " + playerTransform.position.z);
+        Debug.Log("Lane transform Z: " + (lane.laneSegments[lane.laneSegments.Count - 1].transform.position.z));
     }
 
     void GenerateLevelSegment(Vector3 startPosition)
@@ -70,6 +96,28 @@ public class LaneController : MonoBehaviour
 
         LevelSegment levelSegment = new LevelSegment();
         levelSegment.lanes = lanes;
-        levelSegments.Add(levelSegment);
+        listlevelSegments.Add(levelSegment);
+
+        Debug.Log("Level Segment Count" + listlevelSegments.Count);
+        Debug.Log("Lanes Count" + listlevelSegments[0].lanes.Count);
+    }
+
+    void DeleteLevelSegment(int segment)
+    { 
+        for(int i = 0; i < 3; ++i)
+        {
+            for (int j = 0; j < 3; ++j)
+            {
+                Destroy(listlevelSegments[segment].lanes[i].laneSegments[j]);
+            }
+
+        }
+        //foreach (LevelSegment seg in listlevelSegments)
+        //{
+        //    foreach (Lane l in seg.lanes)
+        //    {
+        //        Destroy(l.laneSegments[0]);
+        //    }
+        //}
     }
 }
