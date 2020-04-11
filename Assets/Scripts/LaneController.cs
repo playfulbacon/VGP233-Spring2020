@@ -22,12 +22,14 @@ public class LaneController : MonoBehaviour
 
     [SerializeField]
     GameObject laneSegmentPrefab;
+    [SerializeField]
+    GameObject obstaclePrefab;
+
     public Transform playerTransform;
     private Renderer rend;
     private float laneWidth = 2f;
     private float laneLength = 10f;
-    [SerializeField]
-    private float generateOffset = 2.5f;
+
     int segmentIndex = 0;
 
     void Awake()
@@ -62,13 +64,13 @@ public class LaneController : MonoBehaviour
         //}
 
         ////Debug
-            if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Vector3 startPosition = lane.laneSegments[lane.laneSegments.Count - 1].transform.position + (Vector3.forward * laneLength / 2);
-            GenerateLevelSegment(startPosition);
-        }
-        Debug.Log("Player Transform Z: " + playerTransform.position.z);
-        Debug.Log("Lane transform Z: " + (lane.laneSegments[lane.laneSegments.Count - 1].transform.position.z));
+        //    if (Input.GetKeyDown(KeyCode.Space))
+        //{
+        //    Vector3 startPosition = lane.laneSegments[lane.laneSegments.Count - 1].transform.position + (Vector3.forward * laneLength / 2);
+        //    GenerateLevelSegment(startPosition);
+        //}
+        //Debug.Log("Player Transform Z: " + playerTransform.position.z);
+        //Debug.Log("Lane transform Z: " + (lane.laneSegments[lane.laneSegments.Count - 1].transform.position.z));
     }
 
     void GenerateLevelSegment(Vector3 startPosition)
@@ -76,7 +78,7 @@ public class LaneController : MonoBehaviour
         int numberOfLanes = 3;
         int laneSegments = 3;
 
-        float spaceBetweenLanes = 0.5f;
+        float spaceBetweenLanes = 0.2f;
 
         List<Lane> lanes = new List<Lane>();
         for(int x = 0; x < numberOfLanes; ++x)
@@ -98,8 +100,13 @@ public class LaneController : MonoBehaviour
         levelSegment.lanes = lanes;
         listlevelSegments.Add(levelSegment);
 
-        Debug.Log("Level Segment Count" + listlevelSegments.Count);
-        Debug.Log("Lanes Count" + listlevelSegments[0].lanes.Count);
+        //Debug.Log("Level Segment Count" + listlevelSegments.Count);
+        //Debug.Log("Lanes Count" + listlevelSegments[0].lanes.Count);
+    }
+
+    void GenerateObstacles()
+    {
+
     }
 
     void DeleteLevelSegment(int segment)
@@ -112,12 +119,5 @@ public class LaneController : MonoBehaviour
             }
 
         }
-        //foreach (LevelSegment seg in listlevelSegments)
-        //{
-        //    foreach (Lane l in seg.lanes)
-        //    {
-        //        Destroy(l.laneSegments[0]);
-        //    }
-        //}
     }
 }

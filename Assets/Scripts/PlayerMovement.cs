@@ -3,27 +3,52 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
-{ 
-    [SerializeField]
-    private float speed = 10.0f;
+{
+    private CharacterController controller;
+    private Vector3 direction;
 
     //Distance between a lane
     [SerializeField]
     private float MoveDistance = 3.5f;
+    [SerializeField]
+    private float jumpForce = 10.0f;
+    [SerializeField]
+    private float Gravity = -20.0f;
+    [SerializeField]
+    private float playerSpeed = 4.0f;
+
     private float currentlane = 1;
+    private int speedIncrementer = 1; 
+    private int lerpValue = 5;
+    private int distanceThreshold = 30;
+  
 
-    
-
-    void Awake()
+    void Start()
     {
-        List<LaneController.Lane> lanes = FindObjectOfType<LaneController>().propLevelSegments[0].lanes;
-        //sets player position to middle lane (Had to offset quad by -3.5 units though)
-        transform.position = lanes[lanes.Count / 2].laneSegments[0].transform.position;
+        controller = GetComponent<CharacterController>();
+        //rb = GetComponent<Rigidbody>();
+        //col = GetComponent<CapsuleCollider>();
+
     }
+
     void Update()
     {
-
-        if(Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
+        direction.z = playerSpeed;
+ 
+    
+        if (controller.isGrounded)
+        {
+            direction.y = -1;
+            if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                Jump();
+            }
+        }
+        else
+        {
+            direction.y += Gravity * Time.deltaTime;
+        }
+        if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
         {
             currentlane++;
             if (currentlane == 3)
@@ -36,6 +61,10 @@ public class PlayerMovement : MonoBehaviour
             if (currentlane == -1)
                 currentlane = 0; 
         }
+
+        controller.Move(direction * Time.deltaTime);
+        IncreaseSpeed();
+        //Calculates our future position
         Vector3 targetPosition = transform.position.z * transform.forward + transform.position.y * transform.up;
        // Debug.Log(targetPosition);
 
@@ -45,20 +74,41 @@ public class PlayerMovement : MonoBehaviour
         targetPosition += Vector3.left * MoveDistance;
       
         }
-
         //Right most lane then move player to the left
         else if (currentlane == 2)
         {
          targetPosition += Vector3.right * MoveDistance;
-
         }
-        transform.position = targetPosition;
+        //Movement Left and Right but not smooth
+       //transform.position = targetPosition;
+
+        //Lerps the position from current position to target position for smoother movement.
+        transform.position = Vector3.Lerp(transform.position, targetPosition, lerpValue * Time.fixedDeltaTime);
+        //Stops Jittering when switching between lanes. 
+        controller.center = controller.center;
+    }
+
+    void IncreaseSpeed()
+    {  
+        if((int)transform.position.z / speedIncrementer == distanceThreshold)
+        {
+            Debug.Log("Distance Reached Incrementing Speed");
+            playerSpeed++;
+            speedIncrementer++;
+        }
 
     }
 
-    private void FixedUpdate()
+    private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        transform.position += transform.forward * Time.deltaTime * speed;
+        if(hit.transform.tag == "Obstacle")
+        {
+            GameOverManager.gameOver = true; 
+        }
+    }
+    private void Jump()
+    {
+        direction.y = jumpForce;
     }
 
 }
