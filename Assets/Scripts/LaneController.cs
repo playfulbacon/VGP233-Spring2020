@@ -24,8 +24,13 @@ public class LaneController : MonoBehaviour
     private float laneWidth = 2f;
     private float laneLength = 10f;
 
+    GameObject player;
+
     void Awake()
     {
+        // Player
+        player = GameObject.FindWithTag("Player");
+
         rend = LaneSegmentPrefab.GetComponentInChildren<Renderer>();
         laneWidth = rend.bounds.size.x;
         laneLength = rend.bounds.size.z;
@@ -35,11 +40,26 @@ public class LaneController : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        LevelSegment firstLane = levelSegments[0];
+        Lane lastLane = levelSegments[levelSegments.Count - 1].lanes[0];
+        Vector3 startPosition = lastLane.laneSegments[lastLane.laneSegments.Count - 1].transform.position + (Vector3.forward * (laneLength / 2));
+
+        // Recycle Lanes
+        if (player.transform.position.z > startPosition.z)
         {
-            Lane lane = levelSegments[levelSegments.Count - 1].lanes[0];
-            Vector3 startPosition = lane.laneSegments[lane.laneSegments.Count - 1].transform.position + (Vector3.forward * (laneLength / 2));
-            GenerateLaneSegment(startPosition);
+            // Change Position
+            foreach (var lane in firstLane.lanes)
+            {
+                foreach (var segment in lane.laneSegments)
+                {
+                    segment.transform.position = new Vector3(segment.transform.position.x, segment.transform.position.y, startPosition.z);
+                }
+            }
+
+            // Send to back of the list
+            LevelSegment firstSegment = levelSegments[0];
+            levelSegments.RemoveAt(0);
+            levelSegments.Add(firstSegment);
         }
     }
 
