@@ -35,4 +35,13 @@ public class Player : MonoBehaviour
 
         speed *= 1.0002f;
     }
+
+    private void OnCollisionEnter(Collision coin)
+    {
+        if (coin.gameObject.tag == "Coin")
+        {
+            speed *= 1.2f;
+            Destroy(coin.gameObject);
+        }
+    }
 }

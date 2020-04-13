@@ -149,6 +149,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41da9d8466bb4af4f958d0a00f49f2c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  numberOfLanes: 3
+  obstaclePrefab: {fileID: 5981952178890518541, guid: 8262658bcef249a4e8b61ba916ab8af1,
+    type: 3}
+  coinPrefab: {fileID: 6160328307695465984, guid: a4ef82270c9afac4ebe31fc91e8ce684,
+    type: 3}
   LaneSegmentPrefab: {fileID: 1167601776880239263, guid: be3c07cb86fc80a44b7b30f5ec71e82e,
     type: 3}
 --- !u!4 &95677391
