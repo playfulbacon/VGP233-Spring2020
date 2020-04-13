@@ -6,9 +6,10 @@ using UnityEngine.UI;
 public class GameOverManager : MonoBehaviour
 {
     public static bool gameOver;
-    public Player player;
     public GameObject gameOverPanel;
-    public Text inGameScore;
+    public Text inGameDistance;
+    public Text inGameCoinText;
+    public Text InGameCoins;
     public Text Distance;
     public Text Coins;
     // Start is called before the first frame update
@@ -22,10 +23,13 @@ public class GameOverManager : MonoBehaviour
     void Update()
     {
         if(gameOver)
-        {
-            
-            Destroy(inGameScore);
-            Distance.text =  player.getDistannce.ToString() + "m";
+        {                        
+            Distance.text = inGameDistance.text;
+            Coins.text = InGameCoins.text;
+            Destroy(inGameDistance);
+            Destroy(InGameCoins);
+            Destroy(inGameCoinText);
+            //Stops the player from going forward
             Time.timeScale = 0;
             gameOverPanel.SetActive(true);
         }

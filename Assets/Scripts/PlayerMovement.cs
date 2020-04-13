@@ -16,12 +16,14 @@ public class PlayerMovement : MonoBehaviour
     private float Gravity = -20.0f;
     [SerializeField]
     private float playerSpeed = 4.0f;
-
+    [SerializeField]
+    private int fastFallMultiplier = 30;
     private float currentlane = 1;
     private int speedIncrementer = 1; 
     private int lerpValue = 5;
     private int distanceThreshold = 30;
-  
+    private int coinsCollected = 0;
+    public int Coins { get { return coinsCollected; } }
 
     void Start()
     {
@@ -46,8 +48,18 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            direction.y += Gravity * Time.deltaTime;
+            if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+            {
+              //  Debug.Log("Fast Falling");
+                direction.y += Gravity * fastFallMultiplier * Time.deltaTime;
+            }
+            else
+            {
+                direction.y += Gravity * Time.deltaTime;
+            }
         }
+
+       
         if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
         {
             currentlane++;
@@ -61,6 +73,8 @@ public class PlayerMovement : MonoBehaviour
             if (currentlane == -1)
                 currentlane = 0; 
         }
+
+      
 
         controller.Move(direction * Time.deltaTime);
         IncreaseSpeed();
@@ -77,14 +91,13 @@ public class PlayerMovement : MonoBehaviour
         //Right most lane then move player to the left
         else if (currentlane == 2)
         {
-         targetPosition += Vector3.right * MoveDistance;
+        //Need that offset on movedistance to fix align properly will fix in future
+         targetPosition += Vector3.right * (MoveDistance - 0.4f);
         }
-        //Movement Left and Right but not smooth
-       //transform.position = targetPosition;
 
         //Lerps the position from current position to target position for smoother movement.
         transform.position = Vector3.Lerp(transform.position, targetPosition, lerpValue * Time.fixedDeltaTime);
-        //Stops Jittering when switching between lanes. 
+        //Stops Jittering when Jumping between lanes. 
         controller.center = controller.center;
     }
 
@@ -106,6 +119,17 @@ public class PlayerMovement : MonoBehaviour
             GameOverManager.gameOver = true; 
         }
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+     
+        if (other.isTrigger)
+        {
+            coinsCollected++;
+            Destroy(other.gameObject);
+        }
+    }
+
     private void Jump()
     {
         direction.y = jumpForce;
