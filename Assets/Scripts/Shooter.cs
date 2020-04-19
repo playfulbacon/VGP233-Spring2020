@@ -8,6 +8,9 @@ public class Shooter : MonoBehaviour
     public event Action OnShoot;
 
     [SerializeField]
+    float speed = 5.0f;
+
+    [SerializeField]
     GameObject bulletPrefab = null;
 
     [SerializeField]
@@ -28,11 +31,21 @@ public class Shooter : MonoBehaviour
     
     private void Update()
     {
+        // Shoot
         if (Input.GetMouseButtonDown(0))
         {
-            Bullet bullet = bulletPool.GetAvailableObect(muzzle.transform.position, muzzle.transform.rotation).GetComponent<Bullet>();
-            bullet.Shoot();
-            OnShoot?.Invoke();
+            GameObject bulletObj = bulletPool.GetAvailableObect(muzzle.transform.position, muzzle.transform.rotation);
+            if (bulletObj != null)
+            {
+                Bullet bullet = bulletObj.GetComponent<Bullet>();
+                bullet.Shoot();
+                OnShoot?.Invoke();
+            }
+        }
+        // Reload
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            bulletPool.Reload();
         }
     }
 }

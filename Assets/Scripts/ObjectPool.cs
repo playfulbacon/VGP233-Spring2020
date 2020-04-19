@@ -7,6 +7,8 @@ public class ObjectPool : MonoBehaviour
     public List<GameObject> Objects = new List<GameObject>();
     public List<GameObject> AvailableObjects;
 
+    private List<GameObject> SpentBullets = new List<GameObject>();
+
     public void Setup(GameObject obj, int size)
     {
         for (int i = 0; i < size; ++i)
@@ -42,6 +44,15 @@ public class ObjectPool : MonoBehaviour
     {
         obj.SetActive(false);
         obj.transform.parent = transform;
-        AvailableObjects.Add(obj);
+        SpentBullets.Add(obj);
+    }
+
+    public void Reload()
+    {
+        foreach (GameObject bullet in SpentBullets)
+        {
+            AvailableObjects.Add(bullet);
+        }
+        SpentBullets.Clear();
     }
 }

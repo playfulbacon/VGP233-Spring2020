@@ -9,6 +9,8 @@ public class ObjectPoolManager : MonoBehaviour
     [SerializeField]
     ObjectPool objectPoolPrefab;
 
+    public ObjectPool objectPool;
+
     private void Awake()
     {
         // Make it a singleton.
@@ -17,7 +19,7 @@ public class ObjectPoolManager : MonoBehaviour
 
     public ObjectPool CreateNewObjectPool(GameObject obj, int size)
     {
-        ObjectPool objectPool = Instantiate(objectPoolPrefab, transform);
+        objectPool = Instantiate(objectPoolPrefab, transform);
         objectPool.Setup(obj, size);
         return objectPool;
     }
