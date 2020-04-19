@@ -1,19 +1,14 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class MouseLook : MonoBehaviour
 {
     [SerializeField]
-    float mouseSensitivity = 100f;
+    private float mouseSensitivity = 100f;
 
     [SerializeField]
-    Transform player;
+    Transform playerBody;
 
-    [SerializeField]
-    Camera cam;
-
-    private float xRotation = 0f;
+    private float RotationX = 0.0f;
 
     private void Start()
     {
@@ -22,11 +17,13 @@ public class MouseLook : MonoBehaviour
 
     private void Update()
     {
-        float mouseX = Input.GetAxis("Mouse X") * Time.deltaTime * mouseSensitivity;
-        float mouseY = Input.GetAxis("Mouse Y") * Time.deltaTime * mouseSensitivity;
-        xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
-        cam.transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
-        player.Rotate(Vector3.up * mouseX);
+        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
+        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
+
+        RotationX -= mouseY;
+        RotationX = Mathf.Clamp(RotationX, -90.0f, 90.0f);
+
+        transform.rotation = Quaternion.Euler(RotationX, 0.0f, 0.0f);
+        playerBody.Rotate(Vector3.up * mouseX);
     }
 }
