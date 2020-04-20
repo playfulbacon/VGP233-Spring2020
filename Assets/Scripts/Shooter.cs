@@ -13,6 +13,9 @@ public class Shooter : MonoBehaviour
     [SerializeField]
     Transform muzzle;
 
+    [SerializeField]
+    int ammo = 7;
+
     private ObjectPool bulletPool;
 
     private void Start()
@@ -28,11 +31,17 @@ public class Shooter : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && ammo > 0)
         {
             Bullet bullet = bulletPool.GetAvailableObject(muzzle.position, muzzle.rotation).GetComponent<Bullet>();
             bullet.Shoot();
             OnShoot?.Invoke();
-        }    
+            ammo -= 1;
+        }
+
+        if (Input.GetKey(KeyCode.R))
+        {
+            ammo = 7;
+        }
     }
 }

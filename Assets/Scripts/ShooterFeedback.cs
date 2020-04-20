@@ -6,10 +6,12 @@ public class ShooterFeedback : MonoBehaviour
 {
     [SerializeField]
     ParticleSystem shootParticles;
+    [SerializeField]
+
 
     private void Start()
     {
-        GetComponent<Shooter>().OnShoot += () => { Shoot(); };
+            GetComponent<Shooter>().OnShoot += () => { Shoot(); };
     }
 
     private void Update()
