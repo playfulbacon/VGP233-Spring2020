@@ -31,29 +31,7 @@ public class MouseLook : MonoBehaviour
         xRotation -= mouseY;
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
-        cam.transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
-        player.Rotate(Vector3.up * mouseX);
-
-        // Move
-        //if (Input.GetKey(KeyCode.W))
-        //{
-        //    player.transform.localPosition = new Vector3(player.transform.position.x, player.transform.position.y, player.transform.position.z + (speed * Time.deltaTime));
-        //}
-        //if (Input.GetKey(KeyCode.A))
-        //{
-        //    player.transform.localPosition = new Vector3(player.transform.position.x - (speed * Time.deltaTime), player.transform.position.y, player.transform.position.z);
-        //}
-        //if (Input.GetKey(KeyCode.S))
-        //{
-        //    player.transform.localPosition = new Vector3(player.transform.position.x, player.transform.position.y, player.transform.position.z - (speed * Time.deltaTime));
-        //}
-        //if (Input.GetKey(KeyCode.D))
-        //{
-        //    player.transform.localPosition = new Vector3(player.transform.position.x + (speed * Time.deltaTime), player.transform.position.y, player.transform.position.z);
-        //}
-
-        // Gotten from internet. Need to understand how it works, better.
-        player.transform.Translate(Vector3.right * Input.GetAxis("Horizontal") * Time.deltaTime * speed);
-        player.transform.Translate(Vector3.forward * Input.GetAxis("Vertical") * Time.deltaTime * speed);
+        cam.transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f); // vertical rotation
+        player.Rotate(Vector3.up * mouseX); // horizontal rotation
     }
 }
