@@ -14,15 +14,15 @@ public class ScoreScreenUI : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Cursor.lockState = CursorLockMode.None;     
-        timeLeft.text = Mathf.Floor(inGameUI.GetCountDownTimer).ToString("F1") + "s";
+        Cursor.lockState = CursorLockMode.None;
+        timeLeft.text = inGameUI.GetCountDownTimer.ToString("F1") + "s";
         targetsHit.text = Target.Instance.getTargetshitCount.ToString();
         inGameUI.gameObject.SetActive(false);
-        playerMovement.gameObject.SetActive(false);     
+        playerMovement.gameObject.SetActive(false);
     }
     private void Update()
     {
-        float calculateScore = (Mathf.Floor(inGameUI.GetCountDownTimer) * 10) + (Target.Instance.getTargetshitCount * 20);
+        float calculateScore = inGameUI.GetCountDownTimer * 10 + (Target.Instance.getTargetshitCount * 20);
         score.text = calculateScore.ToString("F1");
     }
 

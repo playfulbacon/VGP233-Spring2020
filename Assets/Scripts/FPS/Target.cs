@@ -31,13 +31,13 @@ public class Target : MonoBehaviour
         {
             targetList.Enqueue(obj);
         }
-        Debug.Log("Targets in List: " + targetList.Count);
+      //  Debug.Log("Targets in List: " + targetList.Count);
     }
 
     public void RemoveFromList()
     {
         targetList.Dequeue();
         targetsHit++;
-        Debug.Log("Remaining Targets: " + targetList.Count);
+       // Debug.Log("Remaining Targets: " + targetList.Count);
     }
 }

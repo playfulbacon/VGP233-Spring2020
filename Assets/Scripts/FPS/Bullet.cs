@@ -26,7 +26,7 @@ public class Bullet : MonoBehaviour
     {
         if(other.tag == "Target")
         {
-            Debug.Log("Target Hit");
+          //  Debug.Log("Target Hit");
             Destroy(other.gameObject);
             Target.Instance.RemoveFromList();
         }
