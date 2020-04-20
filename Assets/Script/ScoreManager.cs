@@ -10,7 +10,7 @@ public class ScoreManager : MonoBehaviour
 
     void Start()
     {
-        mText = Component.FindObjectOfType<Text>();
+        mText = FindObjectOfType<Text>();
     }
 
     public void UpdateScore()
