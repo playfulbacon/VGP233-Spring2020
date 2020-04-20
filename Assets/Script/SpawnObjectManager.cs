@@ -13,7 +13,7 @@ public class SpawnObjectManager : MonoBehaviour
     private Vector3 mSize;
 
     [SerializeField]
-    private int mCount = 10;
+    public int mCount = 10;
 
     private void Start()
     {
