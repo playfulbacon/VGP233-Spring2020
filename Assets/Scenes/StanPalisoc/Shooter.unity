@@ -780,9 +780,9 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 20744710}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &496396350 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 495594140488626979, guid: 2986909b5d8d6064198733be9e360fad,
+--- !u!143 &496396353 stripped
+CharacterController:
+  m_CorrespondingSourceObject: {fileID: 4740672933380498774, guid: 2986909b5d8d6064198733be9e360fad,
     type: 3}
   m_PrefabInstance: {fileID: 495594140160006941}
   m_PrefabAsset: {fileID: 0}
@@ -2401,7 +2401,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c633288ef773b6847861f8685302e7a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 496396350}
+  controller: {fileID: 496396353}
   movementSpeed: 15
 --- !u!4 &2068935301
 Transform:
@@ -2516,6 +2516,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: m_Height
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Radius
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 495594140488626979, guid: 2986909b5d8d6064198733be9e360fad,
         type: 3}
       propertyPath: m_Name
