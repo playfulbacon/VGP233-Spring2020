@@ -57,7 +57,7 @@ public class Player : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Collectable"))
         {
-            scoreManager.UpdatePickUpCoins();
+            scoreManager.UpdateScore();
             mPowerUpController.ActivePowerUp(this);
             Destroy(other.gameObject);
         }

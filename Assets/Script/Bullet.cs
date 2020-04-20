@@ -6,8 +6,10 @@ using System;
 public class Bullet : MonoBehaviour
 {
     public event Action OnDestroy;
+    public event Action OnShoot;
+    public event Action OnBodyCount;
 
-    private float speed = 300f;
+    private readonly float speed = 200f;
     private Rigidbody rb;
 
     public void Shoot()
@@ -18,13 +20,22 @@ public class Bullet : MonoBehaviour
         Invoke("Destroy", 2f);
     }
 
-    private void Update()
-    {
-       // transform.position += transform.forward * Time.deltaTime * speed;
-    }
-
     private void Destroy()
     {
         OnDestroy?.Invoke();
+    }
+
+    public void BodyCount()
+    {
+        OnBodyCount?.Invoke();
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            Destroy(collision.gameObject);
+            Invoke("BodyCount", 0f);
+        }
     }
 }

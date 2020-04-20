@@ -309,7 +309,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 15
-  scoreManager: {fileID: 0}
+  scoreManager: {fileID: 825811112}
 --- !u!4 &388771206
 Transform:
   m_ObjectHideFlags: 0

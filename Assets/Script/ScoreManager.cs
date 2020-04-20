@@ -13,7 +13,7 @@ public class ScoreManager : MonoBehaviour
         mText = Component.FindObjectOfType<Text>();
     }
 
-    public void UpdatePickUpCoins()
+    public void UpdateScore()
     {
         count++;
         mText.text = "Score: " + count;

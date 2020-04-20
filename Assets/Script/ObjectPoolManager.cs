@@ -1,16 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class ObjectPoolManager : MonoBehaviour
 {
 
     [SerializeField]
-    ObjectPool objectPoolPrefab;
-
-    private void Awake()
-    {
-    }
+    private ObjectPool objectPoolPrefab;
 
     public ObjectPool CreateNewObjectPool(GameObject obj, int size)
     {
