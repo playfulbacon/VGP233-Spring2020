@@ -5,7 +5,7 @@ using UnityEngine;
 public class ScoreController : MonoBehaviour
 {
     public event System.Action<int> OnScoreChanged;
-    public int score = 0;
+    private int score = 0;
 
     void Start()
     {
