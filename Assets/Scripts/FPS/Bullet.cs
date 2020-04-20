@@ -22,14 +22,16 @@ public class Bullet : MonoBehaviour
         //transform.position += transform.forward * Time.deltaTime * speed;
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        if(collision.collider.tag == "Target")
+        if(other.tag == "Target")
         {
-            Debug.Log("Hit");
-            Destroy(collision.gameObject);
+            Debug.Log("Target Hit");
+            Destroy(other.gameObject);
+            Target.Instance.RemoveFromList();
         }
     }
+
 
     private void Destroy()
     {

@@ -6,9 +6,17 @@ public class Movement : MonoBehaviour
 {
     public GameObject player;
     [SerializeField]
-    private float movementSpeed = 5.0f;
+    private float movementSpeed = 100.0f;
     private void Update()
     {
+        if(Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            movementSpeed *= 2;
+        }
+        else if(Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            movementSpeed /= 2;
+        }
         if(Input.GetKey(KeyCode.W))
         {
             player.transform.Translate(Vector3.forward * movementSpeed * Time.deltaTime);
