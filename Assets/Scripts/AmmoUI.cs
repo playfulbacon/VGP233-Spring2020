@@ -6,15 +6,11 @@ using UnityEngine.UI;
 public class AmmoUI : MonoBehaviour
 {
     [SerializeField]
-    Text ScoreText;
+    Text AmmoText;
 
-    private void Awake()
-    {
-        FindObjectOfType<ScoreController>().OnScoreChanged += (x) => { ScoreText.text = "score: " + x.ToString(); };
-    }
 
     void Update()
     {
-        
+        AmmoText.text = "Ammo: " + FindObjectOfType<Shooter>().ammo;
     }
 }

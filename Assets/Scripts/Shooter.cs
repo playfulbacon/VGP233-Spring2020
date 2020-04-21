@@ -6,6 +6,7 @@ using System;
 public class Shooter : MonoBehaviour
 {
     public event Action OnShoot;
+    public event Action<int> OnShootChanged;
 
     [SerializeField]
     GameObject bulletPrefab;
@@ -37,6 +38,7 @@ public class Shooter : MonoBehaviour
             bullet.Shoot();
             OnShoot?.Invoke();
             ammo -= 1;
+            OnShootChanged?.Invoke(ammo);
         }
 
         if (Input.GetKey(KeyCode.R))
