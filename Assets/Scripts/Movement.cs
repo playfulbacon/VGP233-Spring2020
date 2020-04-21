@@ -6,30 +6,16 @@ public class Movement : MonoBehaviour
 {
     [SerializeField]
     float speed = 10;
-    private Rigidbody rigid;
 
     [SerializeField]
     CharacterController Controller;
-
+    [SerializeField]
+    GameObject player;
     void Update()
     {
-        Vector3 pos = transform.position;
-        if (Input.GetKey("w"))
-        {
-            pos.z += speed * Time.deltaTime;
-        }
-        if (Input.GetKey("s"))
-        {
-            pos.z -= speed * Time.deltaTime;
-        }
-        if (Input.GetKey("d"))
-        {
-            pos.x += speed * Time.deltaTime;
-        }
-        if (Input.GetKey("a"))
-        {
-            pos.x -= speed * Time.deltaTime;
-        }
-        transform.position = pos;
+        player.transform.Translate(Vector3.right * Input.GetAxis("Horizontal") * Time.deltaTime * speed);
+        player.transform.Translate(Vector3.forward * Input.GetAxis("Vertical") * Time.deltaTime * speed);
+        Vector3 move = (Controller.transform.right * Input.GetAxis("Horizontal")) + (Controller.transform.forward * Input.GetAxis("Vertical"));
+        Controller.Move(move * Time.deltaTime * speed);
     }
 }

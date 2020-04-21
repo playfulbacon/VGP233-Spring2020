@@ -14,7 +14,7 @@ public class Shooter : MonoBehaviour
     Transform muzzle;
 
     [SerializeField]
-    int ammo = 7;
+    public int ammo = 7;
 
     private ObjectPool bulletPool;
 
