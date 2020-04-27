@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -32,7 +31,7 @@ public class BattleUI : MonoBehaviour
         {
             Button moveButton = Instantiate(moveButtonPrefab, moveButtonsHolder);
             moveButton.GetComponentInChildren<Text>().text = move.Name;
-            moveButton.onClick.AddListener(() => battleController.PerformPlayerMove(battleController.Player.Moves.IndexOf(move)));
+            //moveButton.onClick.AddListener(() => battleController.PerformPlayerMove(battleController.Player.Moves.IndexOf(move)));
             moveButtons.Add(moveButton);
         }
     }
@@ -56,9 +55,8 @@ public class BattleUI : MonoBehaviour
             btn.onClick.RemoveAllListeners();
         }
 
-        for (int i = 0; i < moveButtons.Count; ++i)
+        for (int i = 0; i < moveButtons.Count - 1; ++i)
         {
-            //TODO: Perguntar amanha sobre isso
             moveButtons[i].onClick.AddListener(() => battleController.PerformPlayerMove(battleController.Player.Moves.IndexOf(battleController.Player.Moves[i])));
         }
 
