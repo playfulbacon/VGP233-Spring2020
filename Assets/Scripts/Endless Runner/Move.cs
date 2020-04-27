@@ -13,18 +13,32 @@ public class Move
     [SerializeField]
     int speed;
 
+    public int GetMoveSpeed { get { return speed; } }
+
     [SerializeField]
     int damage;
 
     [SerializeField]
     int maxEnergy;
 
+    public int GetMaxEnergy { get { return maxEnergy; } }
+
     public int Damage { get { return damage; } }
 
     [SerializeField]
     GameConstants.Type type;
 
+    public GameConstants.Type MoveType { get { return type; } }
+
+    [SerializeField]
     private int energy;
+
+    public int GetEnergy { get { return energy; } }
+
+    public Move(string name)
+    {
+        this.name = name;
+    }
 
     public Move(string name, int speed, int damage, GameConstants.Type type, int maxEnergy)
     {

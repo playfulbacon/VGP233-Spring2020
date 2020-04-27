@@ -39,7 +39,7 @@ public class BattleController : MonoBehaviour
     {
         Move move = performer.Moves[moveIndex];
         if (move.AttemptMove())
-            receiver.ReceiveMove(move);
+            receiver.ReceiveMove(move, receiver.GetCharType);
 
         OnMovePerformed?.Invoke();
     }
@@ -52,14 +52,20 @@ public class BattleController : MonoBehaviour
     IEnumerator BattleSequence(int moveIndex)
     {
         OnBattleSequenceBegin?.Invoke();
+        int enemyMoveIndex = Random.Range(0, enemy.Moves.Count);
 
-        // TODO: calculate initiative
-        PerformMove(player, enemy, moveIndex);
-
-        yield return new WaitForSeconds(1f);
-
-        PerformMove(enemy, player, Random.Range(0, enemy.Moves.Count));
-
+        if (player.GetSpeed + player.Moves[moveIndex].GetMoveSpeed >= enemy.GetSpeed + enemy.Moves[enemyMoveIndex].GetMoveSpeed)
+        {
+            PerformMove(player, enemy, moveIndex);
+            yield return new WaitForSeconds(1f);
+            PerformMove(enemy, player, enemyMoveIndex);
+        }
+        else
+        {
+            PerformMove(enemy, player, enemyMoveIndex);
+            yield return new WaitForSeconds(1f);
+            PerformMove(player, enemy, moveIndex);
+        }
         OnBattleSequenceEnd?.Invoke();
     }
 }

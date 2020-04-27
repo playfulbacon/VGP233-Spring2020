@@ -17,7 +17,14 @@ public class BattleUI : MonoBehaviour
     [SerializeField]
     Transform moveButtonsHolder;
 
+    public Text playerName;
+    Text playerType;
+
+    public Text EnemyName;
+    Text EnemyType;
+
     private BattleController battleController;
+
 
     private List<Button> moveButtons = new List<Button>();
 
@@ -31,10 +38,12 @@ public class BattleUI : MonoBehaviour
         foreach(Move move in battleController.Player.Moves)
         {
             Button moveButton = Instantiate(moveButtonPrefab, moveButtonsHolder);
-            moveButton.GetComponentInChildren<Text>().text = move.Name;
+            moveButton.GetComponentInChildren<Text>().text = move.Name + " " + move.GetEnergy;
             moveButton.onClick.AddListener(() => battleController.PerformPlayerMove(battleController.Player.Moves.IndexOf(move)));
             moveButtons.Add(moveButton);
         }
+        playerName.text = battleController.Player.propName;
+        EnemyName.text = battleController.Enemy.propName;
     }
 
     private void SetMoveButtonsInteractable(bool set)
@@ -45,7 +54,11 @@ public class BattleUI : MonoBehaviour
 
     void Update()
     {
-        
+        for(int i = 0; i < moveButtons.Count; ++i)
+        {
+            moveButtons[i].GetComponentInChildren<Text>().text = battleController.Player.Moves[i].Name + "\n " 
+            + battleController.Player.Moves[i].GetEnergy + "/" + battleController.Player.Moves[i].GetMaxEnergy; 
+        }
     }
 
     private void UpdateUI()
