@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class GameConstants : MonoBehaviour
 {
-    public enum Type { Rock, Paper, Scissors };
+    public enum Type { Fire, Water, Grass };
 }

@@ -11,7 +11,7 @@ public class BattleController : MonoBehaviour
     [SerializeField]
     Character player;
 
-    public Character Player { get { return player; } }
+    public Character Player { get { return player; } set { player = value; } }
 
     [SerializeField]
     Character enemy;
@@ -26,20 +26,20 @@ public class BattleController : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
-            PerformMove(player, enemy, 0);
+            PerformMove(player, enemy, 0, 1.0f);
 
         if (Input.GetKeyDown(KeyCode.Alpha2))
-            PerformMove(player, enemy, 1);
+            PerformMove(player, enemy, 1, 1.0f);
 
         if (Input.GetKeyDown(KeyCode.Alpha3))
-            PerformMove(player, enemy, 2);
+            PerformMove(player, enemy, 2, 1.0f);
     }
 
-    private void PerformMove(Character performer, Character receiver, int moveIndex)
+    private void PerformMove(Character performer, Character receiver, int moveIndex, float mulitplier)
     {
         Move move = performer.Moves[moveIndex];
         if (move.AttemptMove())
-            receiver.ReceiveMove(move);
+            receiver.ReceiveMove(move,mulitplier);
 
         OnMovePerformed?.Invoke();
     }
@@ -54,12 +54,45 @@ public class BattleController : MonoBehaviour
         OnBattleSequenceBegin?.Invoke();
 
         // TODO: calculate initiative
-        PerformMove(player, enemy, moveIndex);
-
-        yield return new WaitForSeconds(1f);
-
-        PerformMove(enemy, player, Random.Range(0, enemy.Moves.Count));
-
+        int enemyMoveIndex = Random.Range(0, enemy.Moves.Count);
+        bool isPlayerFirst = true;
+        float enemyMulitplier = CalculateMulitplier(enemy.Moves[enemyMoveIndex].Type,player.PokemoType);
+        float playerMulitplier = CalculateMulitplier(player.Moves[moveIndex].Type, enemy.PokemoType);
+        Debug.Log("enemy: " + enemyMoveIndex);
+        Debug.Log("Player: " + moveIndex);
+        if (player.Moves[moveIndex].Speed + player.Speed < enemy.Moves[enemyMoveIndex].Speed + enemy.Speed)
+        {
+            isPlayerFirst = false;
+        }
+        if (isPlayerFirst)
+        {
+            PerformMove(player, enemy, moveIndex,playerMulitplier);
+            yield return new WaitForSeconds(1f);
+            PerformMove(enemy, player, enemyMoveIndex,enemyMulitplier);
+        }
+        else
+        {
+            PerformMove(enemy, player, enemyMoveIndex, enemyMulitplier);
+            yield return new WaitForSeconds(1f);
+            PerformMove(player, enemy, moveIndex,playerMulitplier);
+        }
         OnBattleSequenceEnd?.Invoke();
+    }
+
+    float CalculateMulitplier(GameConstants.Type attackType, GameConstants.Type defenderType)
+    {
+        if (attackType == GameConstants.Type.Fire && defenderType == GameConstants.Type.Grass)
+        {
+            return 1.2f;
+        }
+        if (attackType < defenderType)
+        {
+            return 1.2f;
+        }
+        else if(attackType > defenderType)
+        {
+            return 0.8f;
+        }
+        return 1.0f;
     }
 }

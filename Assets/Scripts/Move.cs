@@ -20,6 +20,9 @@ public class Move
     int maxEnergy;
 
     public int Damage { get { return damage; } }
+    public int Energy { get { return energy; } }
+    public int Speed { get { return speed; } }
+    public GameConstants.Type Type { get { return type; } }
 
     [SerializeField]
     GameConstants.Type type;
@@ -33,7 +36,6 @@ public class Move
         this.damage = damage;
         this.type = type;
         this.maxEnergy = maxEnergy;
-
         energy = maxEnergy;
     }
 
@@ -46,4 +48,6 @@ public class Move
         }
         else return false;
     }
+
+
 }
