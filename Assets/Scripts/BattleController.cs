@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class BattleController : MonoBehaviour
@@ -8,20 +9,39 @@ public class BattleController : MonoBehaviour
     public event System.Action OnMovePerformed;
     public event System.Action OnBattleSequenceBegin;
     public event System.Action OnBattleSequenceEnd;
+    public event System.Action OnPerformMoves;
+
+    [SerializeField]
+    GameObject teamCharacters;
 
     [SerializeField]
     Character player;
 
-    public Character Player { get { return player; } }
+    public Character Player
+    {
+        get => player;
+        set => player = value;
+    }
 
     [SerializeField]
     Character enemy;
 
     public Character Enemy { get { return enemy; } }
 
+    private WaitForSeconds mWaitOneSecond;
+    public List<Character> ListCharacters { get; private set; }
+
+    private bool mSwitchPlayer = false;
+
+    private void Awake()
+    {
+        ListCharacters = teamCharacters.transform.GetComponentsInChildren<Character>().ToList();
+        ListCharacters[1].gameObject.SetActive(false);
+    }
+
     void Start()
     {
-
+        mWaitOneSecond = new WaitForSeconds(1.0f);
     }
 
     void Update()
@@ -40,6 +60,14 @@ public class BattleController : MonoBehaviour
         {
             PerformMove(player, enemy, 2);
         }
+
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            mSwitchPlayer = !mSwitchPlayer;
+            ListCharacters[0].gameObject.SetActive(mSwitchPlayer);
+            ListCharacters[1].gameObject.SetActive(!mSwitchPlayer);
+        }
+
     }
 
 
@@ -48,7 +76,8 @@ public class BattleController : MonoBehaviour
         Move move = performed.Moves[moveindex];
         if (move.AttemptMove())
         {
-            receiver.ReceiveMove(move);
+            receiver.CheckCharacterType(performed, move);
+            //receiver.ReceiveMove(move);
         }
         OnMovePerformed?.Invoke();
     }
@@ -58,14 +87,26 @@ public class BattleController : MonoBehaviour
         StartCoroutine(BattleSequence(moveIndex));
     }
 
+    public void PerformPlayerMoves(int moveIndex)
+    {
+
+    }
+
     IEnumerator BattleSequence(int moveIndex)
     {
         OnBattleSequenceBegin?.Invoke();
-        //TODO: calculate initiative
-        PerformMove(player, enemy, moveIndex);
-
-        yield return new WaitForSeconds(1.0f);
-        PerformMove(enemy, player, Random.Range(0, enemy.Moves.Count));
+        if (player.Speed > enemy.Speed)
+        {
+            PerformMove(player, enemy, moveIndex);
+            yield return mWaitOneSecond;
+            PerformMove(enemy, player, Random.Range(0, enemy.Moves.Count));
+        }
+        else
+        {
+            PerformMove(enemy, player, Random.Range(0, enemy.Moves.Count));
+            yield return mWaitOneSecond;
+            PerformMove(player, enemy, moveIndex);
+        }
         OnBattleSequenceEnd?.Invoke();
     }
 

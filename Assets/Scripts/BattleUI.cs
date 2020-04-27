@@ -19,7 +19,7 @@ public class BattleUI : MonoBehaviour
 
     private BattleController battleController;
 
-    private List<Button> moveButtons = new List<Button>();
+    private readonly List<Button> moveButtons = new List<Button>();
 
     void Start()
     {
@@ -47,6 +47,20 @@ public class BattleUI : MonoBehaviour
 
     void Update()
     {
+        battleController.Player = battleController.ListCharacters[0].gameObject.activeSelf ?
+            battleController.ListCharacters[0].gameObject.transform.GetComponent<Character>() :
+            battleController.ListCharacters[1].gameObject.transform.GetComponent<Character>();
+
+        foreach (var btn in moveButtons)
+        {
+            btn.onClick.RemoveAllListeners();
+        }
+
+        for (int i = 0; i < moveButtons.Count; ++i)
+        {
+            //TODO: Perguntar amanha sobre isso
+            moveButtons[i].onClick.AddListener(() => battleController.PerformPlayerMove(battleController.Player.Moves.IndexOf(battleController.Player.Moves[i])));
+        }
 
     }
 

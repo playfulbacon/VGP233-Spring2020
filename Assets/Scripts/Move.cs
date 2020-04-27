@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
@@ -8,7 +7,7 @@ public class Move
     [SerializeField]
     string name;
 
-    public string Name { get { return name; } }
+    public string Name { get { return $"{name}\n Energy: {maxEnergy}"; } }
 
     [SerializeField]
     int speed;
@@ -35,6 +34,13 @@ public class Move
         this.maxEnergy = maxEnergy;
         energy = maxEnergy;
     }
+
+    //public int TypedDamage(GameConstants.Type type)
+    //{
+    //    if ()
+
+    //    return 0;
+    //}
 
     public bool AttemptMove()
     {

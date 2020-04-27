@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class Character : MonoBehaviour
@@ -13,6 +12,9 @@ public class Character : MonoBehaviour
     [SerializeField]
     float maxHealth;
 
+    [SerializeField]
+    private float health;
+
     public float MaxHealth { get { return maxHealth; } }
 
     [SerializeField]
@@ -20,6 +22,13 @@ public class Character : MonoBehaviour
 
     [SerializeField]
     int speed;
+
+    public int Speed { get { return speed; } }
+
+    [SerializeField]
+    private GameConstants.CharacterType mCharType;
+
+    public GameConstants.CharacterType CharType { get { return mCharType; } }
 
     [SerializeField]
     List<GameConstants.Type> types;
@@ -29,23 +38,39 @@ public class Character : MonoBehaviour
 
     public List<Move> Moves { get { return moves; } }
 
-    [SerializeField]
-    private float health;
+   
 
     public float Health { get { return health; } }
 
     private void Awake()
     {
         health = maxHealth;
-        moves = new List<Move>();
-        moves.Add(new Move("Attack 1", 5, 10, GameConstants.Type.Paper, 3));
-        moves.Add(new Move("Attack 2", 5, 5, GameConstants.Type.Scissors, 3));
-        moves.Add(new Move("Attack 3", 5, 15, GameConstants.Type.Rock, 3));
+        moves = new List<Move>
+        {
+            new Move("Paper attack", 5, 10, GameConstants.Type.Paper, 3),
+            new Move("Special Scissor", 5, 5, GameConstants.Type.Scissors, 3),
+            new Move("Rock attack", 5, 15, GameConstants.Type.Rock, 3)
+        };
     }
 
-    void Update()
+    public void CheckCharacterType(Character enemy, Move receiveAttack)
     {
-
+        if (mCharType != enemy.mCharType)
+        {
+            if (((mCharType == GameConstants.CharacterType.Water) && (enemy.mCharType == GameConstants.CharacterType.Fire))
+                || (((mCharType == GameConstants.CharacterType.Wind) && (enemy.mCharType == GameConstants.CharacterType.Rock))))
+            {
+                health -= receiveAttack.Damage >> 1;
+            }
+            else
+            {
+                health -= receiveAttack.Damage << 1;
+            }
+        }
+        else
+        {
+            health -= receiveAttack.Damage;
+        }
     }
 
     public void ReceiveMove(Move attack)
