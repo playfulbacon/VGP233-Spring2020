@@ -17,11 +17,12 @@ public class BattleUI : MonoBehaviour
     [SerializeField]
     Transform moveButtonsHolder;
 
+
     public Text playerName;
-    Text playerType;
+    public RawImage playerType;
 
     public Text EnemyName;
-    Text EnemyType;
+    public RawImage EnemyType;
 
     private BattleController battleController;
 
@@ -63,7 +64,41 @@ public class BattleUI : MonoBehaviour
         }
         playerName.text = battleController.Player.propName;
         EnemyName.text = battleController.Enemy.propName;
+        UpdateTypeUI();
         UpdateUI();
+    }
+
+    private void UpdateTypeUI()
+    {
+        switch (battleController.Player.GetCharType)
+        {
+            case GameConstants.Type.Rock:
+                playerType.color = Color.magenta;
+                EnemyType.color = Color.magenta;
+
+                break;
+            case GameConstants.Type.Paper:
+                playerType.color = Color.cyan;
+                EnemyType.color = Color.cyan;
+
+                break;
+            case GameConstants.Type.Scissors:
+                playerType.color = Color.green;
+                EnemyType.color = Color.green;
+                break;
+        }
+        switch(battleController.Enemy.GetCharType)
+        {
+            case GameConstants.Type.Rock:
+                EnemyType.color = Color.magenta;
+                break;
+            case GameConstants.Type.Paper:
+                EnemyType.color = Color.cyan;
+                break;
+            case GameConstants.Type.Scissors:
+                EnemyType.color = Color.green;
+                break;   
+        }
     }
 
     private void UpdateUI()
