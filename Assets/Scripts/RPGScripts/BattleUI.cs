@@ -34,16 +34,18 @@ public class BattleUI : MonoBehaviour
         battleController.OnMovePerformed += UpdateUI;
         battleController.OnBattleSequenceBegin += () => SetMoveButtonsInteractable(false);
         battleController.OnBattleSequenceEnd += () => SetMoveButtonsInteractable(true);
+        Debug.Log(battleController.Player.propName);
 
-        foreach(Move move in battleController.Player.Moves)
+        for(int i = 0; i < battleController.Player.Moves.Count; i++)
         {
+            int tempI = i;
             Button moveButton = Instantiate(moveButtonPrefab, moveButtonsHolder);
-            moveButton.GetComponentInChildren<Text>().text = move.Name + " " + move.GetEnergy;
-            moveButton.onClick.AddListener(() => battleController.PerformPlayerMove(battleController.Player.Moves.IndexOf(move)));
+            moveButton.GetComponentInChildren<Text>().text = 
+                battleController.Player.Moves[i].Name + " " + battleController.Player.Moves[i].GetEnergy;
+            moveButton.onClick.AddListener(() => battleController.PerformPlayerMove(tempI));
             moveButtons.Add(moveButton);
         }
-        playerName.text = battleController.Player.propName;
-        EnemyName.text = battleController.Enemy.propName;
+   
     }
 
     private void SetMoveButtonsInteractable(bool set)
@@ -54,11 +56,14 @@ public class BattleUI : MonoBehaviour
 
     void Update()
     {
-        for(int i = 0; i < moveButtons.Count; ++i)
+        for(int i = 0; i < moveButtons.Count ; ++i)
         {
             moveButtons[i].GetComponentInChildren<Text>().text = battleController.Player.Moves[i].Name + "\n " 
             + battleController.Player.Moves[i].GetEnergy + "/" + battleController.Player.Moves[i].GetMaxEnergy; 
         }
+        playerName.text = battleController.Player.propName;
+        EnemyName.text = battleController.Enemy.propName;
+        UpdateUI();
     }
 
     private void UpdateUI()

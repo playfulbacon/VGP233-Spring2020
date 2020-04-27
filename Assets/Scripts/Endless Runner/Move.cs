@@ -38,6 +38,8 @@ public class Move
     public Move(string name)
     {
         this.name = name;
+        maxEnergy = 100;
+        energy = maxEnergy;
     }
 
     public Move(string name, int speed, int damage, GameConstants.Type type, int maxEnergy)

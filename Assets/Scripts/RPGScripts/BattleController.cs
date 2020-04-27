@@ -8,10 +8,13 @@ public class BattleController : MonoBehaviour
     public event System.Action OnBattleSequenceBegin;
     public event System.Action OnBattleSequenceEnd;
 
-    [SerializeField]
-    Character player;
+    public PartySystem partySystem;
 
-    public Character Player { get { return player; } }
+    [SerializeField]
+    private Character currentPlayer;
+
+    public Character Player { get { return currentPlayer; }
+                            set { currentPlayer = value; } }
 
     [SerializeField]
     Character enemy;
@@ -20,51 +23,61 @@ public class BattleController : MonoBehaviour
 
     void Start()
     {
-        
+
+       
     }
 
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
-            PerformMove(player, enemy, 0);
+            PerformMove(currentPlayer, enemy, 0);
 
         if (Input.GetKeyDown(KeyCode.Alpha2))
-            PerformMove(player, enemy, 1);
+            PerformMove(currentPlayer, enemy, 1);
 
         if (Input.GetKeyDown(KeyCode.Alpha3))
-            PerformMove(player, enemy, 2);
+            PerformMove(currentPlayer, enemy, 2);
+
+        
     }
 
     private void PerformMove(Character performer, Character receiver, int moveIndex)
-    {
-        Move move = performer.Moves[moveIndex];
+    {     
+            Move move = performer.Moves[moveIndex];
+    
         if (move.AttemptMove())
+        {
             receiver.ReceiveMove(move, receiver.GetCharType);
-
-        OnMovePerformed?.Invoke();
+            OnMovePerformed?.Invoke();
+        }
     }
 
     public void PerformPlayerMove(int moveIndex)
     {
+        if (moveIndex == 3)
+        {
+            FindObjectOfType<PartyUI>().TurnOnPanel();
+            return;
+        }
         StartCoroutine(BattleSequence(moveIndex));
     }
 
     IEnumerator BattleSequence(int moveIndex)
     {
         OnBattleSequenceBegin?.Invoke();
-        int enemyMoveIndex = Random.Range(0, enemy.Moves.Count);
+        int enemyMoveIndex = Random.Range(0, enemy.Moves.Count - 1);
 
-        if (player.GetSpeed + player.Moves[moveIndex].GetMoveSpeed >= enemy.GetSpeed + enemy.Moves[enemyMoveIndex].GetMoveSpeed)
+        if (currentPlayer.GetSpeed + currentPlayer.Moves[moveIndex].GetMoveSpeed >= enemy.GetSpeed + enemy.Moves[enemyMoveIndex].GetMoveSpeed)
         {
-            PerformMove(player, enemy, moveIndex);
+            PerformMove(currentPlayer, enemy, moveIndex);
             yield return new WaitForSeconds(1f);
-            PerformMove(enemy, player, enemyMoveIndex);
+            PerformMove(enemy, currentPlayer, enemyMoveIndex);
         }
         else
         {
-            PerformMove(enemy, player, enemyMoveIndex);
+            PerformMove(enemy, currentPlayer, enemyMoveIndex);
             yield return new WaitForSeconds(1f);
-            PerformMove(player, enemy, moveIndex);
+            PerformMove(currentPlayer, enemy, moveIndex);
         }
         OnBattleSequenceEnd?.Invoke();
     }
