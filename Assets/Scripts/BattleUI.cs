@@ -28,11 +28,11 @@ public class BattleUI : MonoBehaviour
         battleController.OnBattleSequenceBegin += () => SetMoveButtonsInteractable(false);
         battleController.OnBattleSequenceEnd += () => SetMoveButtonsInteractable(true);
 
-        foreach(Move move in battleController.Player.Moves)
+        foreach(Move move in battleController.PlayerCharacter.Moves)
         {
             Button moveButton = Instantiate(moveButtonPrefab, moveButtonsHolder);
             moveButton.GetComponentInChildren<Text>().text = move.Name;
-            moveButton.onClick.AddListener(() => battleController.PerformPlayerMove(battleController.Player.Moves.IndexOf(move)));
+            moveButton.onClick.AddListener(() => battleController.PerformPlayerMove(battleController.PlayerCharacter.Moves.IndexOf(move)));
             moveButtons.Add(moveButton);
         }
     }
@@ -50,7 +50,7 @@ public class BattleUI : MonoBehaviour
 
     private void UpdateUI()
     {
-        playerHealthbar.value = battleController.Player.Health / battleController.Player.MaxHealth;
+        playerHealthbar.value = battleController.PlayerCharacter.Health / battleController.PlayerCharacter.MaxHealth;
         enemyHealthbar.value = battleController.Enemy.Health / battleController.Enemy.MaxHealth;
     }
 }

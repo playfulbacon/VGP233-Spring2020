@@ -26,13 +26,19 @@ public class Move
 
     private int energy;
 
-    public Move(string name, int speed, int damage, GameConstants.Type type, int maxEnergy)
+    [SerializeField]
+    string animationName;
+
+    public string AnimationName { get { return animationName; } }
+
+    public Move(string name, int speed, int damage, GameConstants.Type type, int maxEnergy, string animationName)
     {
         this.name = name;
         this.speed = speed;
         this.damage = damage;
         this.type = type;
         this.maxEnergy = maxEnergy;
+        this.animationName = animationName;
 
         energy = maxEnergy;
     }

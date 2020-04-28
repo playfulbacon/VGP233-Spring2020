@@ -9,39 +9,30 @@ public class BattleController : MonoBehaviour
     public event System.Action OnBattleSequenceEnd;
 
     [SerializeField]
-    Character player;
+    Character playerCharacter;
 
-    public Character Player { get { return player; } }
+    public Character PlayerCharacter { get { return playerCharacter; } }
 
     [SerializeField]
     Character enemy;
 
     public Character Enemy { get { return enemy; } }
 
-    void Start()
+    private void Start()
     {
         
     }
 
-    void Update()
+    private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
-            PerformMove(player, enemy, 0);
+            PerformMove(playerCharacter, enemy, 0);
 
         if (Input.GetKeyDown(KeyCode.Alpha2))
-            PerformMove(player, enemy, 1);
+            PerformMove(playerCharacter, enemy, 1);
 
         if (Input.GetKeyDown(KeyCode.Alpha3))
-            PerformMove(player, enemy, 2);
-    }
-
-    private void PerformMove(Character performer, Character receiver, int moveIndex)
-    {
-        Move move = performer.Moves[moveIndex];
-        if (move.AttemptMove())
-            receiver.ReceiveMove(move);
-
-        OnMovePerformed?.Invoke();
+            PerformMove(playerCharacter, enemy, 2);
     }
 
     public void PerformPlayerMove(int moveIndex)
@@ -49,17 +40,24 @@ public class BattleController : MonoBehaviour
         StartCoroutine(BattleSequence(moveIndex));
     }
 
-    IEnumerator BattleSequence(int moveIndex)
-    {
+    private IEnumerator BattleSequence(int moveIndex)
+    {     
         OnBattleSequenceBegin?.Invoke();
 
-        // TODO: calculate initiative
-        PerformMove(player, enemy, moveIndex);
+        yield return PerformMove(playerCharacter, enemy, moveIndex);
 
-        yield return new WaitForSeconds(1f);
-
-        PerformMove(enemy, player, Random.Range(0, enemy.Moves.Count));
+        yield return PerformMove(enemy, playerCharacter, Random.Range(0, enemy.Moves.Count));
 
         OnBattleSequenceEnd?.Invoke();
+    }
+
+    private IEnumerator PerformMove(Character performer, Character receiver, int moveIndex)
+    {
+        Move move = performer.Moves[moveIndex];
+        performer.PerformMove(moveIndex);
+        float attackTime = performer.GetComponent<CharacterAnimationController>().GetAnimationLength(move.AnimationName);
+        yield return new WaitForSeconds(attackTime);
+        receiver.ReceiveMove(move);
+        OnMovePerformed?.Invoke();
     }
 }

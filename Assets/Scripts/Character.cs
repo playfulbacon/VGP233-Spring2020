@@ -1,9 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class Character : MonoBehaviour
 {
+    public event Action OnMovePerformed;
+    public event Action OnMoveReceived;
+
     [SerializeField]
     string name;
 
@@ -36,20 +40,18 @@ public class Character : MonoBehaviour
     private void Awake()
     {
         health = maxHealth;
-
-        moves = new List<Move>();
-        moves.Add(new Move("Attack 1", 5, 10, GameConstants.Type.Paper, 3));
-        moves.Add(new Move("Attack 2", 5, 5, GameConstants.Type.Scissors, 3));
-        moves.Add(new Move("Attack 3", 5, 15, GameConstants.Type.Rock, 3));
     }
 
-    void Update()
+    public void PerformMove(int moveIndex)
     {
-        
+        OnMovePerformed?.Invoke();
     }
 
     public void ReceiveMove(Move attack)
     {
+        // modify damage based on type matchup
         health -= attack.Damage;
+
+        OnMoveReceived?.Invoke();
     }
 }
