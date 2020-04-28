@@ -11,7 +11,7 @@ public class PartySystem : MonoBehaviour
     public GameObject characterPrefab;
     [SerializeField]
     public List<GameObject> partyList = new List<GameObject>();
-
+    public Transform playerspawn;
 
     private int previousIndex = 0;
     public int playerIndex { get { return previousIndex; } }
@@ -29,7 +29,7 @@ public class PartySystem : MonoBehaviour
     {
         for(int i = 0; i < PartySize; i++ )
         {            
-            partyList.Add(Instantiate(characterPrefab));
+            partyList.Add(Instantiate(characterPrefab, playerspawn));
         }
         for(int i = 1; i < PartySize; i++)
         {

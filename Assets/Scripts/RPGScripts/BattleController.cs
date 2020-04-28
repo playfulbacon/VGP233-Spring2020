@@ -42,9 +42,9 @@ public class BattleController : MonoBehaviour
     }
 
     private void PerformMove(Character performer, Character receiver, int moveIndex)
-    {     
-            Move move = performer.Moves[moveIndex];
-    
+    {            
+        Move move = performer.Moves[moveIndex];
+        performer.PerformMove(moveIndex);
         if (move.AttemptMove())
         {
             receiver.ReceiveMove(move, receiver.GetCharType);
@@ -66,17 +66,18 @@ public class BattleController : MonoBehaviour
     {
         OnBattleSequenceBegin?.Invoke();
         int enemyMoveIndex = Random.Range(0, enemy.Moves.Count - 1);
+       // float attacktime = Player.GetComponent<CharacterAnimationController>().GetAnimationLength("attack");
 
         if (currentPlayer.GetSpeed + currentPlayer.Moves[moveIndex].GetMoveSpeed >= enemy.GetSpeed + enemy.Moves[enemyMoveIndex].GetMoveSpeed)
         {
             PerformMove(currentPlayer, enemy, moveIndex);
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(1.0f);
             PerformMove(enemy, currentPlayer, enemyMoveIndex);
         }
         else
         {
             PerformMove(enemy, currentPlayer, enemyMoveIndex);
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(1.0f);
             PerformMove(currentPlayer, enemy, moveIndex);
         }
         OnBattleSequenceEnd?.Invoke();

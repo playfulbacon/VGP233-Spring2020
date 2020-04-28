@@ -1,9 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 
 public class Character : MonoBehaviour
 {
+    public event System.Action OnMovePerformed;
+    public event System.Action OnMoveRecieved;
     [SerializeField]
     string charname;
 
@@ -61,11 +64,6 @@ public class Character : MonoBehaviour
         defence = randomDefense;
         charType = randomType;
         movesList = PopulateMoves();
-        //moves = new List<Move>();
-        //moves.Add(new Move("Paper Airplane", 2, 7, GameConstants.Type.Paper, 10));
-        //moves.Add(new Move("Scissor Cut", 5, 5, GameConstants.Type.Scissors, 5));
-        //moves.Add(new Move("Rock Throw", 0, 15, GameConstants.Type.Rock, 7));
-        // moves.Add(new Move("Switch"));
     }
 
     List<Move> PopulateMoves()
@@ -98,6 +96,11 @@ public class Character : MonoBehaviour
             randomName = randomName + characters[Random.Range(0, characters.Length)];
         }
         return randomName + "mon";
+    }
+
+    public void PerformMove(int MoveIndex)
+    {
+        OnMovePerformed?.Invoke();
     }
 
     public void ReceiveMove(Move attack, GameConstants.Type characterType)
@@ -175,5 +178,6 @@ public class Character : MonoBehaviour
         recieveMove  = charname + "\n" +
                     " recieved " + resultDamage.ToString("F1") + 
                     "(" + attack.MoveType + ")" + " damage" + effective;
+        OnMoveRecieved?.Invoke();
     }
 }
