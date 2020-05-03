@@ -82,11 +82,11 @@ public class BattleUI : MonoBehaviour
         mainButtons.Add(itemsButton);
 
         // Instantiate Moves
-        foreach (Move move in battleController.Player.Moves)
+        foreach (Move move in battleController.PlayerCharacter.Moves)
         {
             Button moveButton = Instantiate(moveButtonPrefab, moveButtonsHolder);
             moveButton.GetComponentInChildren<Text>().text = string.Format("{0} - {1}/{2}", move.Name, move.Energy, move.MaxEnergy);
-            moveButton.onClick.AddListener(() => battleController.PerformPlayerMove(battleController.Player.Moves.IndexOf(move)));
+            moveButton.onClick.AddListener(() => battleController.PerformPlayerMove(battleController.PlayerCharacter.Moves.IndexOf(move)));
 
             moveButtons.Add(moveButton);
         }
@@ -108,7 +108,7 @@ public class BattleUI : MonoBehaviour
         {
             Button itemButton = Instantiate(moveButtonPrefab, itemsButtonsHolder);
             itemButton.GetComponentInChildren<Text>().text = item.mName;
-            itemButton.onClick.AddListener(() => battleController.UseItem(battleController.Enemy, item));
+            itemButton.onClick.AddListener(() => battleController.UseItem(battleController.EnemyCharacter, item));
             itemButton.onClick.AddListener(() => ShowMainUI());
             itemsButtons.Add(itemButton);
         }
@@ -121,9 +121,9 @@ public class BattleUI : MonoBehaviour
 
         // Instantiate Character Names
         playerName = Instantiate(playerNamePrefab, canvas);
-        playerName.text = battleController.Player.Name;
+        playerName.text = battleController.PlayerCharacter.Name;
         enemyName = Instantiate(enemyNamePrefab, canvas);
-        enemyName.text = battleController.Enemy.Name;
+        enemyName.text = battleController.EnemyCharacter.Name;
     }
 
     private void SetMoveButtonsInteractable(bool set)
@@ -135,19 +135,19 @@ public class BattleUI : MonoBehaviour
     void Update()
     {
         // Names
-        playerName.text = battleController.Player.Name;
-        enemyName.text = battleController.Enemy.Name;
+        playerName.text = battleController.PlayerCharacter.Name;
+        enemyName.text = battleController.EnemyCharacter.Name;
     }
 
     private void UpdateUI()
     {
-        playerHealthbar.value = battleController.Player.Health / battleController.Player.MaxHealth;
-        enemyHealthbar.value = battleController.Enemy.Health / battleController.Enemy.MaxHealth;
+        playerHealthbar.value = battleController.PlayerCharacter.Health / battleController.PlayerCharacter.MaxHealth;
+        enemyHealthbar.value = battleController.EnemyCharacter.Health / battleController.EnemyCharacter.MaxHealth;
         // Update Energy Spent
-        for (int i = 0; i < battleController.Player.Moves.Count; ++i)
+        for (int i = 0; i < battleController.PlayerCharacter.Moves.Count; ++i)
         {
             moveButtons[i].GetComponentInChildren<Text>().text = string.Format("{0} - {1}/{2}",
-                battleController.Player.Moves[i].Name, battleController.Player.Moves[i].Energy, battleController.Player.Moves[i].MaxEnergy);
+                battleController.PlayerCharacter.Moves[i].Name, battleController.PlayerCharacter.Moves[i].Energy, battleController.PlayerCharacter.Moves[i].MaxEnergy);
         }
     }
 

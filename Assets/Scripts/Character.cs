@@ -1,9 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class Character : MonoBehaviour
 {
+    public event Action OnMovePerformed;
+    public event Action OnMoveReceived;
+
     [SerializeField]
     string mName;
 
@@ -50,6 +54,11 @@ public class Character : MonoBehaviour
     public Character(string name)
     {
         mName = name;
+    }
+
+    public void PerformMove(int moveindex)
+    {
+        OnMovePerformed?.Invoke();
     }
 
     public void ReceiveMove(Move move)
@@ -105,5 +114,7 @@ public class Character : MonoBehaviour
         {
             health -= move.Damage;
         }
+
+        OnMoveReceived?.Invoke();
     }
 }

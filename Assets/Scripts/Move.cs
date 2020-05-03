@@ -29,6 +29,11 @@ public class Move
     public int Energy {  get { return energy; } }
 
     [SerializeField]
+    string animationName;
+
+    public string AnimationName { get { return animationName; } }
+
+    [SerializeField]
     GameConstants.Attribute type;
 
     public GameConstants.Attribute Type { get { return type; } }

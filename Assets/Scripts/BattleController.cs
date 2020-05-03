@@ -10,9 +10,9 @@ public class BattleController : MonoBehaviour
     public event System.Action<Character> OnFighterCaptured;
 
     [SerializeField]
-    Character player;
+    Character playerCharacter;
 
-    public Character Player { get { return player; } }
+    public Character PlayerCharacter { get { return playerCharacter; } }
 
     private List<Character> playerTeam = new List<Character>();
     public List<Character> PlayerTeam { get { return playerTeam; } }
@@ -21,9 +21,9 @@ public class BattleController : MonoBehaviour
 
 
     [SerializeField]
-    Character enemy;
+    Character enemyCharacter;
 
-    public Character Enemy { get { return enemy; } }
+    public Character EnemyCharacter { get { return enemyCharacter; } }
 
     private List<Character> enemyTeam = new List<Character>();
 
@@ -31,10 +31,10 @@ public class BattleController : MonoBehaviour
 
     void Awake()
     {
-        playerTeam.Add(player);
+        playerTeam.Add(playerCharacter);
         Item capture = new Item("Bootleg Pokeball", Item.Effect.Capture);
         playerItemList.Add(capture);
-        enemyTeam.Add(enemy);
+        enemyTeam.Add(enemyCharacter);
 
         // Adding more fighter to player team
         playerTeam.Add(new Character("Characmander"));
@@ -43,23 +43,13 @@ public class BattleController : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
-            PerformMove(player, enemy, 0);
+            PerformMove(playerCharacter, enemyCharacter, 0);
 
         if (Input.GetKeyDown(KeyCode.Alpha2))
-            PerformMove(player, enemy, 1);
+            PerformMove(playerCharacter, enemyCharacter, 1);
 
         if (Input.GetKeyDown(KeyCode.Alpha3))
-            PerformMove(player, enemy, 2);
-    }
-
-    private void PerformMove(Character attacker, Character defender, int moveIndex)
-    {
-        Move move = attacker.Moves[moveIndex];
-
-        if (move.AttemptMove())
-            defender.ReceiveMove(move);
-
-        OnMovePerformed?.Invoke();
+            PerformMove(playerCharacter, enemyCharacter, 2);
     }
 
     public void PerformPlayerMove(int moveIndex)
@@ -72,26 +62,39 @@ public class BattleController : MonoBehaviour
         OnBattleSequenceStart?.Invoke();
 
         // Calculate initiative
-        int enemyMoveIndex = Random.Range(0, enemy.Moves.Count);
+        int enemyMoveIndex = Random.Range(0, enemyCharacter.Moves.Count);
 
-        if ((player.Speed + player.Moves[moveIndex].Speed) > (enemy.Speed + enemy.Moves[enemyMoveIndex].Speed))
+        if ((playerCharacter.Speed + playerCharacter.Moves[moveIndex].Speed) > (enemyCharacter.Speed + enemyCharacter.Moves[enemyMoveIndex].Speed))
         {
-            PerformMove(player, enemy, moveIndex);
-            yield return new WaitForSeconds(1f);
-            PerformMove(enemy, player, enemyMoveIndex);
+            float attackTime = playerCharacter.GetComponent<CharacterAnimationController>().GetAnimationLength("Attack");
+            PerformMove(playerCharacter, enemyCharacter, moveIndex);
+            yield return new WaitForSeconds(attackTime);
+            PerformMove(enemyCharacter, playerCharacter, enemyMoveIndex);
         }
         else
         {
-            PerformMove(enemy, player, enemyMoveIndex);
-            PerformMove(player, enemy, moveIndex);
+            PerformMove(enemyCharacter, playerCharacter, enemyMoveIndex);
+            PerformMove(playerCharacter, enemyCharacter, moveIndex);
         }
 
         OnBattleSequenceEnd?.Invoke();
     }
 
+    private void PerformMove(Character attacker, Character defender, int moveIndex)
+    {
+        attacker.PerformMove(moveIndex);
+
+        Move move = attacker.Moves[moveIndex];
+
+        if (move.AttemptMove())
+            defender.ReceiveMove(move);
+
+        OnMovePerformed?.Invoke();
+    }
+
     public void ChangeCharacter(Character switchTo)
     {
-        player = switchTo;
+        playerCharacter = switchTo;
     }
 
     public void UseItem(Character target, Item item)
