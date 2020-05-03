@@ -43,10 +43,14 @@ public class BattleController : MonoBehaviour
     private IEnumerator BattleSequence(int moveIndex)
     {     
         OnBattleSequenceBegin?.Invoke();
-
+        
+        yield return MoveForward(PlayerCharacter);
         yield return PerformMove(playerCharacter, enemy, moveIndex);
+        yield return MoveBackward(PlayerCharacter);
 
+        yield return MoveForward(enemy);
         yield return PerformMove(enemy, playerCharacter, Random.Range(0, enemy.Moves.Count));
+        yield return MoveBackward(enemy);
 
         OnBattleSequenceEnd?.Invoke();
     }
@@ -59,5 +63,19 @@ public class BattleController : MonoBehaviour
         yield return new WaitForSeconds(attackTime);
         receiver.ReceiveMove(move);
         OnMovePerformed?.Invoke();
+    }
+
+    private IEnumerator MoveForward(Character toMove)
+    {
+        toMove.IsMovingForward = true;
+        yield return new WaitForSeconds(1);
+        toMove.IsMovingForward = false;
+    }
+
+    private IEnumerator MoveBackward(Character toMove)
+    {
+        toMove.IsMovingBackward = true;
+        yield return new WaitForSeconds(1);
+        toMove.IsMovingBackward = false;
     }
 }

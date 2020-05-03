@@ -37,9 +37,29 @@ public class Character : MonoBehaviour
 
     public float Health { get { return health; } }
 
+    private bool isMovingForward = false;
+
+    public bool IsMovingForward { get { return isMovingForward; } set { isMovingForward = value; } }
+
+    private bool isMovingBackward = false;
+
+    public bool IsMovingBackward { get { return isMovingBackward; } set { isMovingBackward = value; } }
+
     private void Awake()
     {
         health = maxHealth;
+    }
+
+    private void Update()
+    {
+        if (IsMovingForward)
+        {
+            MoveForward();
+        }
+        else if (isMovingBackward)
+        {
+            MoveBackward();
+        }
     }
 
     public void PerformMove(int moveIndex)
@@ -53,5 +73,15 @@ public class Character : MonoBehaviour
         health -= attack.Damage;
 
         OnMoveReceived?.Invoke();
+    }
+
+    public void MoveForward()
+    {
+        transform.position += transform.forward * Time.deltaTime;
+    }
+
+    public void MoveBackward()
+    {
+        transform.position -= transform.forward * Time.deltaTime;
     }
 }

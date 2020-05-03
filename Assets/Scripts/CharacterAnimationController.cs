@@ -8,16 +8,27 @@ public class CharacterAnimationController : MonoBehaviour
     private Character character;
     private Dictionary<string, float> animationNameLengthDictionary = new Dictionary<string, float>();
 
+    private bool isAlive = true;
+
     private void Awake()
     {
         animator = GetComponentInChildren<Animator>();
         character = GetComponent<Character>();
 
         character.OnMovePerformed += PerformMove;
-        character.OnMoveReceived += ReceiveMove;
+        //character.OnMoveReceived += ReceiveMove;
 
         foreach(AnimationClip clip in animator.runtimeAnimatorController.animationClips)
             animationNameLengthDictionary.Add(clip.name, clip.length);
+    }
+
+    private void Update()
+    {
+        if (isAlive && character.Health <= 0)
+        {
+            Death();
+            isAlive = false;
+        }
     }
 
     public float GetAnimationLength(string name)
@@ -29,13 +40,16 @@ public class CharacterAnimationController : MonoBehaviour
 
     private void PerformMove()
     {
-        // TODO: get trigger name from Move
         animator.SetTrigger("Attack");
     }
 
-    private void ReceiveMove()
+    public void ReceiveMove()
     {
-        // TODO: get trigger name from Move
         animator.SetTrigger("Damage");
+    }
+
+    public void Death()
+    {
+        animator.SetTrigger("Death");
     }
 }
