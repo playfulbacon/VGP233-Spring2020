@@ -21,6 +21,17 @@ public class AnimationEventHandler : MonoBehaviour
         }
     }
 
+    private void StartAttack()
+    {
+        foreach (KeyValuePair<CharacterAnimationController, ParticleSystem> character in CharacterParticlesDamage)
+        {
+            if (character.Key.GetComponentInChildren<Animator>() == this.GetComponent<Animator>())
+            {
+                character.Key.GetComponentInChildren<AudioSource>().Play();
+            }
+        }
+    }
+
     private void AnimAttack()
     {
         foreach (KeyValuePair<CharacterAnimationController, ParticleSystem> character in CharacterParticlesDamage)
