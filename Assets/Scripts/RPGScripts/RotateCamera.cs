@@ -12,7 +12,7 @@ public class RotateCamera : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        originalPos.SetLookRotation(this.transform.position);
+        originalPos.SetLookRotation(transform.position);
     }
 
     // Update is called once per frame

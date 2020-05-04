@@ -9,6 +9,7 @@ public class CharacterAnimationController : MonoBehaviour
     private Character character;
     private Dictionary<string, float> animationDictionary = new Dictionary<string, float>();
     private BattleUI BattleUI;
+   
     // Start is called before the first frame update
     void Awake()
     {
@@ -16,6 +17,8 @@ public class CharacterAnimationController : MonoBehaviour
         character = GetComponentInChildren<Character>();
 
         character.OnMovePerformed += PerformMove;
+        FindObjectOfType<BattleController>().gameObject.GetComponent<BattleController>().OnWalk
+            += PerformWalk;
        // character.OnDeath += StartCoroutine(PerformOnDeath);
        // character.GetComponentInParent<BattleController>().OnWalk += PerformWalk;
 

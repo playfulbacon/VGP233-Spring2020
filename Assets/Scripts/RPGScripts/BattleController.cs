@@ -10,6 +10,8 @@ public class BattleController : MonoBehaviour
     public event System.Action OnWalk;
     public event System.Action OnDeath;
 
+    public AudioClip dynamaxSound;
+    public AudioClip attackClip;
     public GameObject cameraView;
     
 
@@ -58,9 +60,11 @@ public class BattleController : MonoBehaviour
     }
     public IEnumerator EnemyToPlayer(float seconds, int enemyMoveIndex)
     {
+       // OnWalk?.Invoke();
         float elapsedTime = 0;
         while (elapsedTime < seconds)
         {
+     
             enemy.transform.position = Vector3.Lerp(enemy.transform.position, playerSpawn.transform.position * offSetPosition, (elapsedTime / seconds));
             elapsedTime += Time.deltaTime;
             yield return new WaitForEndOfFrame();
@@ -80,6 +84,7 @@ public class BattleController : MonoBehaviour
 
         if (move.AttemptMove())
         {
+            AudioSource.PlayClipAtPoint(attackClip,performer.gameObject.transform.position);
             OnMovePerformed?.Invoke();
             receiver.ReceiveMove(move, receiver.GetCharType, performer.BonusDamage);
             receiver.GetComponent<ParticleSystem>().Play();
@@ -99,8 +104,10 @@ public class BattleController : MonoBehaviour
             Move Dynamaxmove = currentPlayer.Moves[moveIndex];
             Dynamaxmove.AttemptMove();
             originalSize = currentPlayer.gameObject.transform;
-            currentPlayer.gameObject.transform.localScale += new Vector3(2, 2, 2);
+            currentPlayer.gameObject.transform.localScale += new Vector3(2.5f, 2.5f, 2.5f);
             currentPlayer.GetDynaMode = true;
+            AudioSource.PlayClipAtPoint(dynamaxSound, currentPlayer.gameObject.transform.position);
+
             return;
         }
         if (currentPlayer.GetDynaDuration == 0)
@@ -139,7 +146,7 @@ public class BattleController : MonoBehaviour
             if (enemy.isDead())
                 OnBattleSequenceEnd?.Invoke();
             else
-                StartCoroutine(EnemyToPlayer(moveDuration, enemyMoveIndex));     
+            StartCoroutine(EnemyToPlayer(moveDuration, enemyMoveIndex));     
         }
         else
         {
@@ -151,8 +158,9 @@ public class BattleController : MonoBehaviour
                StartCoroutine(PlayerToEnemy(moveDuration, moveIndex));
               
         }
-        OnBattleSequenceEnd?.Invoke();
+     
         yield return new WaitForSeconds(3f);
+        OnBattleSequenceEnd?.Invoke();
         cameraView.GetComponent<RotateCamera>().ToggleBattleView = false;
 
     }

@@ -36,7 +36,7 @@ public class BattleUI : MonoBehaviour
         battleController.OnMovePerformed += UpdateUI;
         battleController.OnBattleSequenceBegin += () => SetMoveButtonsInteractable(false);
         battleController.OnBattleSequenceEnd += () => SetMoveButtonsInteractable(true);
-        Debug.Log(battleController.Player.propName);
+        //Debug.Log(battleController.Player.propName);
 
         for (int i = 0; i < battleController.Player.Moves.Count; i++)
         {
@@ -61,7 +61,7 @@ public class BattleUI : MonoBehaviour
 
     public void SetSwitchButton(bool set)
     {
-        moveButtons[moveButtons.Count].interactable = set;
+        moveButtons[moveButtons.Count - 1].interactable = set;
     }
 
     void Update()
@@ -70,6 +70,10 @@ public class BattleUI : MonoBehaviour
         {
             moveButtons[i].GetComponentInChildren<Text>().text = battleController.Player.Moves[i].Name + "\n "
             + battleController.Player.Moves[i].GetEnergy + "/" + battleController.Player.Moves[i].GetMaxEnergy;
+            if(battleController.Player.Moves[i].GetEnergy == 0)
+            {
+                moveButtons[i].interactable = false;
+            }
         }
         playerName.text = battleController.Player.propName;
         EnemyName.text = battleController.Enemy.propName;

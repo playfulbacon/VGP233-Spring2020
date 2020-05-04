@@ -77,11 +77,12 @@ public class Character : MonoBehaviour
     {
         for (int i = 0; i < 3; ++i)
         {
-            GameConstants.Type randomType = (GameConstants.Type)Random.Range(0, 2);
+            GameConstants.Names randomMoveName = (GameConstants.Names)Random.Range(0, System.Enum.GetValues(typeof(GameConstants.Names)).Length);
+            GameConstants.Type randomType = (GameConstants.Type)Random.Range(0, System.Enum.GetValues(typeof(GameConstants.Type)).Length);
             int randomDamage = Random.Range(1, 10);
             int randomEnergy = Random.Range(5, 10);
             int randomSpeed = Random.Range(0, 10);
-            movesList.Add(new Move("move" + i, randomSpeed, randomDamage, randomType, randomEnergy));
+            movesList.Add(new Move(randomType.ToString() + " " + randomMoveName.ToString(), randomSpeed, randomDamage, randomType, randomEnergy));
         }
         movesList.Add(new Move("DYNAMAX", 100, 0, GameConstants.Type.Paper, 1));
         movesList.Add(new Move("Switch"));

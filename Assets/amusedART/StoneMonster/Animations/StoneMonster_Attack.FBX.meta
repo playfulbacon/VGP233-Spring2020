@@ -89,7 +89,8 @@ ModelImporter:
     resampleCurves: 1
     optimizeGameObjects: 0
     motionNodeName: 
-    rigImportErrors: 
+    rigImportErrors: "Invalid Avatar Rig Configuration. Missing or invalid transform:\n\tRequired
+      human bone 'LeftLowerLeg' not found\n"
     rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: 
@@ -175,7 +176,53 @@ ModelImporter:
   humanDescription:
     serializedVersion: 3
     human: []
-    skeleton: []
+    skeleton:
+    - name: StoneMonster_Attack(Clone)
+      parentName: 
+      position: {x: 0, y: 0, z: 0}
+      rotation: {x: 0, y: 0, z: 0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: StoneMonster
+      parentName: StoneMonster_Attack(Clone)
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071068}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Bone001
+      parentName: StoneMonster_Attack(Clone)
+      position: {x: 0.0000000080335045, y: 0.7531236, z: -0.18378516}
+      rotation: {x: 0.70624334, y: -0.034934662, z: -0.70624334, w: 0.03493465}
+      scale: {x: 1.0000014, y: 1.0000029, z: 1.000001}
+    - name: Bone002
+      parentName: Bone001
+      position: {x: -0.18503706, y: -0.00000022888183, z: 0.0000000058529483}
+      rotation: {x: -0.000000029802315, y: 0.0000000065192567, z: 0.48566777, w: 0.8741435}
+      scale: {x: 1.0000002, y: 1.0000005, z: 1.0000001}
+    - name: Bone003
+      parentName: Bone002
+      position: {x: -0.43220642, y: 0.00000015258789, z: 0.000000014091802}
+      rotation: {x: -0.0000000023076374, y: -0.000000029946367, z: -0.000000111758695,
+        w: 1}
+      scale: {x: 1.0000006, y: 1.0000018, z: 1.0000005}
+    - name: Bone004
+      parentName: Bone001
+      position: {x: -0.18503706, y: -0.000000038146972, z: 5.684342e-16}
+      rotation: {x: -0.008327305, y: -0.014236043, z: -0.6590766, w: 0.75189507}
+      scale: {x: 0.9999999, y: 1.0000004, z: 1.0000002}
+    - name: Bone005
+      parentName: Bone004
+      position: {x: -0.40081942, y: -0.000000057220458, z: 0.0000000031438994}
+      rotation: {x: -0, y: -0, z: -5.5511145e-17, w: 1}
+      scale: {x: 1, y: 1.0000002, z: 1}
+    - name: Bone006
+      parentName: Bone001
+      position: {x: -0.18503706, y: -0.000000076293944, z: 2.2737367e-15}
+      rotation: {x: -0, y: 0.0000000074505797, z: 0.96958077, w: 0.2447716}
+      scale: {x: 1.0000002, y: 0.99999964, z: 1.0000002}
+    - name: Bone007
+      parentName: Bone006
+      position: {x: -0.62484634, y: -0.00000019073485, z: 5.6843415e-15}
+      rotation: {x: -0, y: -0, z: -0, w: 1}
+      scale: {x: 1.0000001, y: 1, z: 1}
     armTwist: 0.5
     foreArmTwist: 0.5
     upperLegTwist: 0.5
