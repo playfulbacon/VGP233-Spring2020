@@ -14,7 +14,7 @@ public class CharacterFeedback : MonoBehaviour
 
     void PlayerDamageParticle()
     {
-        damageParticle.Play();
+        Instantiate(damageParticle,transform.position,transform.rotation);
     }
 
 }
