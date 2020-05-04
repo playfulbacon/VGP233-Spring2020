@@ -32,6 +32,7 @@ public class BattleController : MonoBehaviour
     [SerializeField]
     Transform enemySpawn;
 
+    private float scale = 2.5f;
     private float moveDuration = 2.5f;
     float offSetPosition = 0.75f;
     public Character Enemy { get { return enemy; } }
@@ -104,7 +105,7 @@ public class BattleController : MonoBehaviour
             Move Dynamaxmove = currentPlayer.Moves[moveIndex];
             Dynamaxmove.AttemptMove();
             originalSize = currentPlayer.gameObject.transform;
-            currentPlayer.gameObject.transform.localScale += new Vector3(2.5f, 2.5f, 2.5f);
+            currentPlayer.gameObject.transform.localScale += new Vector3(scale, scale, scale);
             currentPlayer.GetDynaMode = true;
             AudioSource.PlayClipAtPoint(dynamaxSound, currentPlayer.gameObject.transform.position);
 
@@ -115,7 +116,7 @@ public class BattleController : MonoBehaviour
             currentPlayer.BonusDamage = 1;
             currentPlayer.GetDynaDuration = 2;
             currentPlayer.GetDynaMode = false;
-            currentPlayer.gameObject.transform.localScale -= new Vector3(1, 1, 1);
+            currentPlayer.gameObject.transform.localScale -= new Vector3(scale, scale, scale);
             return;
         }
 
