@@ -23,7 +23,7 @@ public class Move
 
     public int GetMaxEnergy { get { return maxEnergy; } }
 
-    public int Damage { get { return damage; } }
+    public int Damage { get { return damage; } set { damage = value; } }
 
     [SerializeField]
     GameConstants.Type type;

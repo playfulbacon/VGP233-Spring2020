@@ -20,7 +20,8 @@ public class BattleUI : MonoBehaviour
 
     public Text playerName;
     public RawImage playerType;
-
+    public Text DynamaxTxt;
+    public Text DynamaxTurnTxt;
     public Text EnemyName;
     public RawImage EnemyType;
 
@@ -37,34 +38,43 @@ public class BattleUI : MonoBehaviour
         battleController.OnBattleSequenceEnd += () => SetMoveButtonsInteractable(true);
         Debug.Log(battleController.Player.propName);
 
-        for(int i = 0; i < battleController.Player.Moves.Count; i++)
+        for (int i = 0; i < battleController.Player.Moves.Count; i++)
         {
             int tempI = i;
             Button moveButton = Instantiate(moveButtonPrefab, moveButtonsHolder);
-            moveButton.GetComponentInChildren<Text>().text = 
+            moveButton.GetComponentInChildren<Text>().text =
                 battleController.Player.Moves[i].Name + " " + battleController.Player.Moves[i].GetEnergy;
             moveButton.onClick.AddListener(() => battleController.PerformPlayerMove(tempI));
             moveButtons.Add(moveButton);
         }
-   
+
     }
 
-    private void SetMoveButtonsInteractable(bool set)
+    public void SetMoveButtonsInteractable(bool set)
     {
-        foreach (Button button in moveButtons)
-            button.interactable = set;
+        for (int i = 0; i < moveButtons.Count; i++)
+        {
+            moveButtons[i].interactable = set;
+        }
+       
+    }
+
+    public void SetSwitchButton(bool set)
+    {
+        moveButtons[moveButtons.Count].interactable = set;
     }
 
     void Update()
     {
-        for(int i = 0; i < moveButtons.Count ; ++i)
+        for (int i = 0; i < moveButtons.Count; ++i)
         {
-            moveButtons[i].GetComponentInChildren<Text>().text = battleController.Player.Moves[i].Name + "\n " 
-            + battleController.Player.Moves[i].GetEnergy + "/" + battleController.Player.Moves[i].GetMaxEnergy; 
+            moveButtons[i].GetComponentInChildren<Text>().text = battleController.Player.Moves[i].Name + "\n "
+            + battleController.Player.Moves[i].GetEnergy + "/" + battleController.Player.Moves[i].GetMaxEnergy;
         }
         playerName.text = battleController.Player.propName;
         EnemyName.text = battleController.Enemy.propName;
         UpdateTypeUI();
+        UpdateDynamaxUI();
         UpdateUI();
     }
 
@@ -87,7 +97,7 @@ public class BattleUI : MonoBehaviour
                 EnemyType.color = Color.green;
                 break;
         }
-        switch(battleController.Enemy.GetCharType)
+        switch (battleController.Enemy.GetCharType)
         {
             case GameConstants.Type.Rock:
                 EnemyType.color = Color.magenta;
@@ -97,12 +107,33 @@ public class BattleUI : MonoBehaviour
                 break;
             case GameConstants.Type.Scissors:
                 EnemyType.color = Color.green;
-                break;   
+                break;
+        }
+    }
+
+    private void UpdateDynamaxUI()
+    {
+        if (battleController.Player.GetDynaMode)
+        {
+            DynamaxTxt.enabled = true;
+            DynamaxTxt.gameObject.SetActive(true);
+            DynamaxTurnTxt.enabled = true;
+            DynamaxTurnTxt.gameObject.SetActive(true);
+            DynamaxTurnTxt.text = battleController.Player.GetDynaDuration.ToString();
+        }
+        else
+        {
+            DynamaxTxt.enabled = false;
+            DynamaxTxt.gameObject.SetActive(false);
+            DynamaxTurnTxt.enabled = false;
+            DynamaxTurnTxt.gameObject.SetActive(false);
         }
     }
 
     private void UpdateUI()
     {
+   
+
         playerHealthbar.value = battleController.Player.Health / battleController.Player.MaxHealth;
         enemyHealthbar.value = battleController.Enemy.Health / battleController.Enemy.MaxHealth;
     }

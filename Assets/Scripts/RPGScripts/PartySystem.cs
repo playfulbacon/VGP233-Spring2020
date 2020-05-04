@@ -46,6 +46,9 @@ public class PartySystem : MonoBehaviour
         Debug.Log("Switching in " + partyList[previousIndex].gameObject.GetComponent<Character>().propName);
         FindObjectOfType<PartyUI>().GetComponent<PartyUI>().TurnOffPanel();
         onSwitchin?.Invoke();
+
+        FindObjectOfType<BattleUI>().gameObject.GetComponent<BattleUI>().SetMoveButtonsInteractable(true);
+
     }
 
 

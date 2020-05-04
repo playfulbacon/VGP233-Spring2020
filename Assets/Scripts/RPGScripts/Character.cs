@@ -7,11 +7,15 @@ public class Character : MonoBehaviour
 {
     public event System.Action OnMovePerformed;
     public event System.Action OnMoveRecieved;
+    public event System.Action OnDeath;
     [SerializeField]
     string charname;
 
     [SerializeField]
     int level;
+
+    [SerializeField]
+    private float health;
 
     [SerializeField]
     float maxHealth;
@@ -30,13 +34,14 @@ public class Character : MonoBehaviour
 
     [SerializeField]
     List<Move> movesList;
-
-    private float health;
     private string recieveMove;
 
     private float effectMulti = 1.5f;
     private float noteffectMulti = 0.5f;
     private float defNegation = 0.1f;
+    private int dynamaxDur = 3;
+    private int bonusDamageMulti = 1;
+    private bool dynaActive = false;
 
     public string Result { get { return recieveMove; } }
     public GameConstants.Type GetCharType { get { return charType; } }
@@ -45,7 +50,9 @@ public class Character : MonoBehaviour
     public List<Move> Moves { get { return movesList; } }
     public float MaxHealth { get { return maxHealth; } }
     public float Health { get { return health; } }
-
+    public int GetDynaDuration { get { return dynamaxDur; } set { dynamaxDur = value; } }
+    public int BonusDamage { get { return bonusDamageMulti; } set { bonusDamageMulti = value; } }
+    public bool GetDynaMode { get { return dynaActive; } set { dynaActive = value; } }
 
     private void Awake()
     {
@@ -76,13 +83,19 @@ public class Character : MonoBehaviour
             int randomSpeed = Random.Range(0, 10);
             movesList.Add(new Move("move" + i, randomSpeed, randomDamage, randomType, randomEnergy));
         }
+        movesList.Add(new Move("DYNAMAX", 100, 0, GameConstants.Type.Paper, 1));
         movesList.Add(new Move("Switch"));
         return movesList;
     }
 
     public bool isDead()
     {
-        return (health <= 0);
+        if(health <= 0)
+        {
+            OnDeath?.Invoke();
+            return true;
+        }
+        return false;
     }
 
 
@@ -103,10 +116,11 @@ public class Character : MonoBehaviour
         OnMovePerformed?.Invoke();
     }
 
-    public void ReceiveMove(Move attack, GameConstants.Type characterType)
+    public void ReceiveMove(Move attack, GameConstants.Type characterType, int bonusDamage)
     {
         float resultDamage = 0;
         string effective;
+    
         //Attack Move
         switch (attack.MoveType)
         {
@@ -167,7 +181,8 @@ public class Character : MonoBehaviour
         {
             effective = "";
         }
-        resultDamage = resultDamage - (defNegation * defence);
+        resultDamage = (resultDamage - (defNegation * defence)) * bonusDamage;
+
         if (resultDamage < 0)
         {
             recieveMove = charname + "\n recieved no damage"; 

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class BattleLogUI : MonoBehaviour
 {
     public Text playerLog;
-    public Text enemyLog;
+    public GameObject panel;
     private PartySystem party;
     public Character enemy;
     private Character player;
@@ -15,14 +15,27 @@ public class BattleLogUI : MonoBehaviour
         party = FindObjectOfType<PartySystem>();   
     }
 
+    public void ShowBattleLog()
+    {
+        if(!panel.activeSelf)
+        panel.SetActive(true);
+        else
+        panel.SetActive(false);
+
+    }
+
     // Update is called once per frame
     void Update()
     {
         player = party.partyList[party.playerIndex].gameObject.GetComponent<Character>();
-        playerLog.text = player.Result;
-        enemyLog.text = enemy.Result;
+        if (player.GetSpeed > enemy.GetSpeed)       
+            playerLog.text = player.Result + "\n" + enemy.Result;
+        else
+            playerLog.text = enemy.Result + "\n" + player.Result;
 
-        if(isSomeoneDead())
+
+
+        if (isSomeoneDead())
             FindObjectOfType<BattleController>().enabled = false;
    
     }
@@ -37,7 +50,7 @@ public class BattleLogUI : MonoBehaviour
         else if (enemy.isDead())
         {
 
-            enemyLog.text = enemy.propName + " died";
+            playerLog.text = enemy.propName + " died";
             return true;
         }
         return false;

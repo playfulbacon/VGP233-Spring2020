@@ -7,11 +7,19 @@ public class BattleController : MonoBehaviour
     public event System.Action OnMovePerformed;
     public event System.Action OnBattleSequenceBegin;
     public event System.Action OnBattleSequenceEnd;
+    public event System.Action OnWalk;
+    public event System.Action OnDeath;
 
-    public PartySystem partySystem;
+    public GameObject cameraView;
+    
 
     [SerializeField]
     private Character currentPlayer;
+
+    [SerializeField]
+    Transform playerSpawn;
+
+    private Transform originalSize;
 
     public Character Player { get { return currentPlayer; }
                             set { currentPlayer = value; } }
@@ -19,67 +27,133 @@ public class BattleController : MonoBehaviour
     [SerializeField]
     Character enemy;
 
-    public Character Enemy { get { return enemy; } }
+    [SerializeField]
+    Transform enemySpawn;
 
+    private float moveDuration = 2.5f;
+    float offSetPosition = 0.75f;
+    public Character Enemy { get { return enemy; } }
+    bool isPlayerMoving = false;
+    bool isPlayerReturning = false;
     void Start()
     {
 
        
     }
 
-    void Update()
+    public IEnumerator PlayerToEnemy( float seconds, int moveIndex)
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-            PerformMove(currentPlayer, enemy, 0);
+        float elapsedTime = 0;
+        while (elapsedTime < seconds)
+        {
+            Player.transform.position = Vector3.Lerp(Player.transform.position, enemySpawn.position * offSetPosition, (elapsedTime / seconds));
+            elapsedTime += Time.deltaTime;
+            yield return new WaitForEndOfFrame();
+          
+        }
+        PerformMove(currentPlayer, enemy, moveIndex);
+        yield return new WaitForSeconds(1f);
+        Player.transform.position = playerSpawn.position;
 
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-            PerformMove(currentPlayer, enemy, 1);
-
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-            PerformMove(currentPlayer, enemy, 2);
-
-        
+    }
+    public IEnumerator EnemyToPlayer(float seconds, int enemyMoveIndex)
+    {
+        float elapsedTime = 0;
+        while (elapsedTime < seconds)
+        {
+            enemy.transform.position = Vector3.Lerp(enemy.transform.position, playerSpawn.transform.position * offSetPosition, (elapsedTime / seconds));
+            elapsedTime += Time.deltaTime;
+            yield return new WaitForEndOfFrame();
+        }
+        PerformMove(enemy, currentPlayer, enemyMoveIndex);
+        yield return new WaitForSeconds(1f);
+        enemy.transform.position = enemySpawn.position;
     }
 
+   
+
     private void PerformMove(Character performer, Character receiver, int moveIndex)
-    {            
+    {       
         Move move = performer.Moves[moveIndex];
+        
         performer.PerformMove(moveIndex);
+
         if (move.AttemptMove())
         {
-            receiver.ReceiveMove(move, receiver.GetCharType);
             OnMovePerformed?.Invoke();
+            receiver.ReceiveMove(move, receiver.GetCharType, performer.BonusDamage);
+            receiver.GetComponent<ParticleSystem>().Play();
         }
     }
 
     public void PerformPlayerMove(int moveIndex)
     {
-        if (moveIndex == 3)
+     
+        if (moveIndex == 4)
         {
             FindObjectOfType<PartyUI>().TurnOnPanel();
             return;
         }
+        if(moveIndex == 3)
+        {
+            Move Dynamaxmove = currentPlayer.Moves[moveIndex];
+            Dynamaxmove.AttemptMove();
+            originalSize = currentPlayer.gameObject.transform;
+            currentPlayer.gameObject.transform.localScale += new Vector3(2, 2, 2);
+            currentPlayer.GetDynaMode = true;
+            return;
+        }
+        if (currentPlayer.GetDynaDuration == 0)
+        {
+            currentPlayer.BonusDamage = 1;
+            currentPlayer.GetDynaDuration = 2;
+            currentPlayer.GetDynaMode = false;
+            currentPlayer.gameObject.transform.localScale -= new Vector3(1, 1, 1);
+            return;
+        }
+
         StartCoroutine(BattleSequence(moveIndex));
     }
 
     IEnumerator BattleSequence(int moveIndex)
     {
+        yield return new WaitForSeconds(0.3f);
+        cameraView.GetComponent<RotateCamera>().ToggleBattleView = true;
         OnBattleSequenceBegin?.Invoke();
         int enemyMoveIndex = Random.Range(0, enemy.Moves.Count - 1);
-       // float attacktime = Player.GetComponent<CharacterAnimationController>().GetAnimationLength("attack");
+        //Debug.Log(Player.GetComponentInChildren<Animator>().);
+        float playeranim = currentPlayer.GetComponentInChildren<Animator>().GetCurrentAnimatorStateInfo(0).length;
+        float enemyAnim = enemy.GetComponentInChildren<Animator>().GetCurrentAnimatorStateInfo(0).length;
+        //Debug.Log("Player Animation Time: " + playeranim);
+       // Debug.Log("Enemy Animation Time: " + enemyAnim);
+       if(currentPlayer.GetDynaMode)
+        {
+            currentPlayer.BonusDamage = 3;
+            currentPlayer.GetDynaDuration--;
+        }
 
         if (currentPlayer.GetSpeed + currentPlayer.Moves[moveIndex].GetMoveSpeed >= enemy.GetSpeed + enemy.Moves[enemyMoveIndex].GetMoveSpeed)
         {
-            PerformMove(currentPlayer, enemy, moveIndex);
-            yield return new WaitForSeconds(1.0f);
-            PerformMove(enemy, currentPlayer, enemyMoveIndex);
+            StartCoroutine(PlayerToEnemy(moveDuration, moveIndex));            
+            yield return new WaitForSeconds(enemyAnim + moveDuration);
+            if (enemy.isDead())
+                OnBattleSequenceEnd?.Invoke();
+            else
+                StartCoroutine(EnemyToPlayer(moveDuration, enemyMoveIndex));     
         }
         else
         {
-            PerformMove(enemy, currentPlayer, enemyMoveIndex);
-            yield return new WaitForSeconds(1.0f);
-            PerformMove(currentPlayer, enemy, moveIndex);
+            StartCoroutine(EnemyToPlayer(moveDuration, enemyMoveIndex));
+            yield return new WaitForSeconds(enemyAnim + moveDuration);
+            if (currentPlayer.isDead())
+                OnBattleSequenceEnd?.Invoke();
+            else
+               StartCoroutine(PlayerToEnemy(moveDuration, moveIndex));
+              
         }
         OnBattleSequenceEnd?.Invoke();
+        yield return new WaitForSeconds(3f);
+        cameraView.GetComponent<RotateCamera>().ToggleBattleView = false;
+
     }
 }
