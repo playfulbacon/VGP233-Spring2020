@@ -31,6 +31,8 @@ public class Move
 
     public string AnimationName { get { return animationName; } }
 
+    public int TurnLeft = 2;
+
     public Move(string name, int speed, int damage, GameConstants.Type type, int maxEnergy, string animationName)
     {
         this.name = name;
@@ -41,6 +43,16 @@ public class Move
         this.animationName = animationName;
 
         energy = maxEnergy;
+    }
+
+    public void Dynamax(Transform transform)
+    {
+        if (TurnLeft > 0)
+        {
+            --TurnLeft;
+            damage <<= 1; // damage *2
+            transform.localScale *= 2;
+        }
     }
 
     public bool AttemptMove()

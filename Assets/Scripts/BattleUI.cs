@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,16 +18,16 @@ public class BattleUI : MonoBehaviour
 
     private BattleController battleController;
 
-    private List<Button> moveButtons = new List<Button>();
+    private readonly List<Button> moveButtons = new List<Button>();
 
     void Start()
     {
         battleController = FindObjectOfType<BattleController>();
-        battleController.OnMovePerformed += UpdateUI;
+        battleController.OnMovePerformedUI += UpdateUI;
         battleController.OnBattleSequenceBegin += () => SetMoveButtonsInteractable(false);
         battleController.OnBattleSequenceEnd += () => SetMoveButtonsInteractable(true);
 
-        foreach(Move move in battleController.PlayerCharacter.Moves)
+        foreach (Move move in battleController.PlayerCharacter.Moves)
         {
             Button moveButton = Instantiate(moveButtonPrefab, moveButtonsHolder);
             moveButton.GetComponentInChildren<Text>().text = move.Name;
@@ -40,7 +39,9 @@ public class BattleUI : MonoBehaviour
     private void SetMoveButtonsInteractable(bool set)
     {
         foreach (Button button in moveButtons)
+        {
             button.interactable = set;
+        }
     }
 
     void Update()

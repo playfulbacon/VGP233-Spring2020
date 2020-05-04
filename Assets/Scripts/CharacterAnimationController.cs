@@ -1,12 +1,15 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Numerics;
 using UnityEngine;
 
 public class CharacterAnimationController : MonoBehaviour
 {
+
     private Animator animator;
     private Character character;
-    private Dictionary<string, float> animationNameLengthDictionary = new Dictionary<string, float>();
+    private readonly Dictionary<string, float> animationNameLengthDictionary = new Dictionary<string, float>();
 
     private void Awake()
     {
@@ -15,16 +18,22 @@ public class CharacterAnimationController : MonoBehaviour
 
         character.OnMovePerformed += PerformMove;
         character.OnMoveReceived += ReceiveMove;
+        character.OnDeath += DeathAnimation;
+        character.OnRun += RunMoves;
 
-        foreach(AnimationClip clip in animator.runtimeAnimatorController.animationClips)
+        foreach (AnimationClip clip in animator.runtimeAnimatorController.animationClips)
+        {
             animationNameLengthDictionary.Add(clip.name, clip.length);
+        }
     }
 
     public float GetAnimationLength(string name)
     {
         if (animationNameLengthDictionary.ContainsKey(name))
+        {
             return animationNameLengthDictionary[name];
-        throw new System.Exception("The animation of name " + name + " does not exist in the animationNameLengthDictionary");
+        }
+        throw new Exception($"The animation of name {name} does not exist in the animationNameLengthDictionary");
     }
 
     private void PerformMove()
@@ -37,5 +46,19 @@ public class CharacterAnimationController : MonoBehaviour
     {
         // TODO: get trigger name from Move
         animator.SetTrigger("Damage");
+    }
+
+    private void RunMoves()
+    {
+        animator.SetTrigger("Run");
+    }
+
+    private void DeathAnimation()
+    {
+        animator.SetTrigger("Death");
+        //if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 1 && !animator.IsInTransition(0))
+        //{
+        //    animator.gameObject.SetActive(false);
+        //}
     }
 }
