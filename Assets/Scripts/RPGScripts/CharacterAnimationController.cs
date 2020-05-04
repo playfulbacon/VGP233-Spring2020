@@ -17,6 +17,7 @@ public class CharacterAnimationController : MonoBehaviour
         character = GetComponentInChildren<Character>();
 
         character.OnMovePerformed += PerformMove;
+        character.OnDamaged += PerfomDamaged;
         FindObjectOfType<BattleController>().gameObject.GetComponent<BattleController>().OnWalk
             += PerformWalk;
        // character.OnDeath += StartCoroutine(PerformOnDeath);
@@ -57,6 +58,11 @@ public class CharacterAnimationController : MonoBehaviour
     private void PerformMove()
     {
         animator.SetTrigger("Attack");
+    }
+
+    private void PerfomDamaged()
+    {
+        animator.SetTrigger("Damaged");
     }
 
     IEnumerator PerformOnDeath()

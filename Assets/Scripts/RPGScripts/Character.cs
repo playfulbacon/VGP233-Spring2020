@@ -7,6 +7,7 @@ public class Character : MonoBehaviour
 {
     public event System.Action OnMovePerformed;
     public event System.Action OnMoveRecieved;
+    public event System.Action OnDamaged;
     public event System.Action OnDeath;
     [SerializeField]
     string charname;
@@ -189,7 +190,8 @@ public class Character : MonoBehaviour
             recieveMove = charname + "\n recieved no damage"; 
             return;
         }
-        
+
+        OnDamaged?.Invoke();
          health -= resultDamage;
         recieveMove  = charname + "\n" +
                     " recieved " + resultDamage.ToString("F1") + 
