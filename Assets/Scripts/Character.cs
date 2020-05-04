@@ -1,9 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class Character : MonoBehaviour
 {
+    public event Action OnMovePerformed;
+    public event Action OnMoveReceived;
+    public event Action OnDeath;
+    public event Action OnMovement;
+
     [SerializeField]
     string name;
 
@@ -30,6 +36,13 @@ public class Character : MonoBehaviour
     [SerializeField]
     List<Move> moves;
 
+    [SerializeField]
+    GameObject EndPosition;
+
+    List<Vector3> destination = new List<Vector3>();
+    public bool IsMoving = false;
+    int currentDestiation = 0;
+
     private float health;
     public List<Move> Moves { get { return moves; } set { moves = value; } }
     public float Health { get { return health; } set { health = value; } }
@@ -38,20 +51,53 @@ public class Character : MonoBehaviour
     private void Awake()
     {
         health = maxHealth;
-
-        moves = new List<Move>();
-        moves.Add(new Move("Ember ", 6, 10, GameConstants.Type.Fire, 3));
-        moves.Add(new Move("Vine Whip ", 10, 5, GameConstants.Type.Grass, 3));
-        moves.Add(new Move("water Gun ", 3, 15, GameConstants.Type.Water, 3));
+        foreach (var move in Moves)
+        {
+            move.Reset();
+        }
+        
+        destination.Add(transform.position);
+        destination.Add(EndPosition.transform.position);
+        currentDestiation = 1;
     }
 
-    void Update()
+    private void Update()
     {
-        
+        if(IsMoving)
+        {
+            transform.position += Vector3.Normalize(destination[currentDestiation] - transform.position) * Time.deltaTime * speed;
+            if(Vector3.Distance( destination[currentDestiation],transform.position)< 0.5f)
+            {
+                IsMoving = false;
+                //OnMovement?.Invoke();
+                currentDestiation = (currentDestiation + 1) % destination.Count; 
+            }
+        }
+    }
+
+    public void PerformMove(int moveIndex)
+    {
+        OnMovePerformed?.Invoke();
     }
 
     public void ReceiveMove(Move attack, float mulitplier)
     {
         health -= attack.Damage * mulitplier;
+        if (health <= 0)
+        {
+            OnDeath?.Invoke();
+        }
+       //OnMoveReceived?.Invoke();
+    }
+
+    public void RecieveMoveAnimation()
+    {
+        OnMoveReceived?.Invoke();
+    }
+
+    public void StartMovement()
+    {
+        IsMoving = true;
+        OnMovement?.Invoke();
     }
 }

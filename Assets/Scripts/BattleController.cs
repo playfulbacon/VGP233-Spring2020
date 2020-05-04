@@ -35,12 +35,22 @@ public class BattleController : MonoBehaviour
             PerformMove(player, enemy, 2, 1.0f);
     }
 
-    private void PerformMove(Character performer, Character receiver, int moveIndex, float mulitplier)
+    private IEnumerator PerformMove(Character performer, Character receiver, int moveIndex, float mulitplier)
     {
         Move move = performer.Moves[moveIndex];
+        if (performer.Health <= 0 || receiver.Health <= 0 || move.Energy <= 0)
+        {
+            yield break;
+        }
+        performer.StartMovement();
+        yield return new WaitUntil(() => performer.IsMoving == false);
+        performer.PerformMove(moveIndex);
+        float attackTime = performer.GetComponent<CharacterAnimationController>().GetAnimationLength(move.AnimationName);
+        yield return new WaitForSeconds(attackTime);
         if (move.AttemptMove())
             receiver.ReceiveMove(move,mulitplier);
-
+        performer.StartMovement();
+        yield return new WaitUntil(() => performer.IsMoving == false);
         OnMovePerformed?.Invoke();
     }
 
@@ -49,7 +59,7 @@ public class BattleController : MonoBehaviour
         StartCoroutine(BattleSequence(moveIndex));
     }
 
-    IEnumerator BattleSequence(int moveIndex)
+    private IEnumerator BattleSequence(int moveIndex)
     {
         OnBattleSequenceBegin?.Invoke();
 
@@ -66,15 +76,15 @@ public class BattleController : MonoBehaviour
         }
         if (isPlayerFirst)
         {
-            PerformMove(player, enemy, moveIndex,playerMulitplier);
-            yield return new WaitForSeconds(1f);
-            PerformMove(enemy, player, enemyMoveIndex,enemyMulitplier);
+            yield return PerformMove(player, enemy, moveIndex,playerMulitplier);
+            //yield return new WaitForSeconds(1f);
+            yield return PerformMove(enemy, player, enemyMoveIndex,enemyMulitplier);
         }
         else
         {
-            PerformMove(enemy, player, enemyMoveIndex, enemyMulitplier);
-            yield return new WaitForSeconds(1f);
-            PerformMove(player, enemy, moveIndex,playerMulitplier);
+            yield return PerformMove(enemy, player, enemyMoveIndex, enemyMulitplier);
+            //yield return new WaitForSeconds(1f);
+            yield return PerformMove(player, enemy, moveIndex,playerMulitplier);
         }
         OnBattleSequenceEnd?.Invoke();
     }
