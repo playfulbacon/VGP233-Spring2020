@@ -4,11 +4,15 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public event System.Action OnJump;
+
     [SerializeField]
     Camera cam;
 
     [SerializeField]
     float moveSpeed = 7f;
+
+    public float MoveSpeed { get { return moveSpeed; } }
 
     [SerializeField]
     float jumpHeight = 4f;
@@ -40,7 +44,10 @@ public class Player : MonoBehaviour
             moveDirection *= moveSpeed;
 
             if (Input.GetButtonDown("Jump"))
+            {
+                OnJump?.Invoke();
                 moveDirection.y = jumpHeight;
+            }
         }
 
         moveDirection.y -= gravity * Time.deltaTime;

@@ -278,7 +278,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cam: {fileID: 1464260034}
   moveSpeed: 10
-  jumpHeight: 10
+  jumpHeight: 12
   gravity: 30
 --- !u!114 &45250427
 MonoBehaviour:
