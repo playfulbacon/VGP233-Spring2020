@@ -11,6 +11,8 @@ public class PlayerAnimation : MonoBehaviour
     private Animator animator;
     private Player player;
 
+    private Dictionary<string, float> animationLengthDictionary = new Dictionary<string, float>();
+
     private void Awake()
     {
         player = GetComponent<Player>();
@@ -18,6 +20,11 @@ public class PlayerAnimation : MonoBehaviour
         animator = GetComponentInChildren<Animator>();
 
         player.OnJump += Jump;
+        player.OnAttack += Attack;
+        player.OnHeavyAttack += HeavyAttack;
+
+        foreach (AnimationClip clip in animator.runtimeAnimatorController.animationClips)
+            animationLengthDictionary.Add(clip.name, clip.length);
     }
 
     private void Update()
@@ -35,6 +42,25 @@ public class PlayerAnimation : MonoBehaviour
         }
 
         animator.SetFloat("MoveSpeed", characterController.velocity.magnitude / player.MoveSpeed);
+    }
+
+    private void Attack()
+    {
+        animator.SetTrigger("Attack");
+        StartCoroutine(AttackAnimation("Attack"));
+    }
+
+    private void HeavyAttack()
+    {
+        animator.SetTrigger("HeavyAttack");
+        StartCoroutine(AttackAnimation("HeavyAttack"));
+    }
+
+    private IEnumerator AttackAnimation(string animationName)
+    {
+        float attackLength = animationLengthDictionary[animationName];
+        yield return new WaitForSeconds(attackLength);
+        player.IsAttacking = false;
     }
 
     private void Jump()
