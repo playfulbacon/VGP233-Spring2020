@@ -8,8 +8,23 @@ public class Player : MonoBehaviour
     private Vector3 moveDirection = Vector3.zero;
     private Camera cam;
 
+    public System.Action OnJump;
+    public System.Action OnLand;
+    public System.Action OnAttack;
+    public System.Action OnHeavyAttack;
+
+    private bool isAttacking;
+
+    public bool IsAttacking
+    {
+        get { return isAttacking; }
+        set { isAttacking = value; }
+    }
+
     [SerializeField]
-    float moveSpeed = 7f;
+    private float moveSpeed = 7f;
+
+    public float MoveSpeed { get { return moveSpeed; } }
 
     [SerializeField]
     float jumpHeight = 10f;
@@ -25,6 +40,7 @@ public class Player : MonoBehaviour
     
     private void Update()
     {
+        // Run
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
             moveSpeed *= 2f;
@@ -41,12 +57,34 @@ public class Player : MonoBehaviour
             Vector3 right = cam.transform.right.normalized;
             right.y = 0f;
 
-            moveDirection = (forward * Input.GetAxis("Vertical")) + (right * Input.GetAxis("Horizontal"));
-            moveDirection *= moveSpeed;
+            moveDirection = Vector3.zero;
+            if (!isAttacking)
+            {
+                moveDirection = (forward * Input.GetAxis("Vertical")) + (right * Input.GetAxis("Horizontal"));
+                moveDirection *= moveSpeed;
+            }
 
             if (Input.GetButtonDown("Jump"))
+            {
+                OnJump?.Invoke();
                 moveDirection.y = jumpHeight;
+            }
+
+            if (Input.GetButtonDown("Attack"))
+            {
+                OnAttack?.Invoke();
+            }
+
+            if (Input.GetButtonDown("HeavyAttack"))
+            {
+                OnHeavyAttack?.Invoke();
+            }
+
+            //// OnLand
+            //OnLand?.Invoke();
         }
+
+        
 
         moveDirection.y -= gravity * Time.deltaTime;
 
