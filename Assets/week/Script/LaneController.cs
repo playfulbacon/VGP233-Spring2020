@@ -15,6 +15,7 @@ public class LaneController : MonoBehaviour
     {
         public List<Lane> lanes = new List<Lane>();
         public List<GameObject> Obsecles = new List<GameObject>();
+        public List<GameObject> Coin = new List<GameObject>(); 
     }
 
     private List<levelSegment> levelSegments = new List<levelSegment>();
@@ -26,6 +27,8 @@ public class LaneController : MonoBehaviour
     Transform player;
     [SerializeField]
     GameObject ObstaclePrefab;
+    [SerializeField]
+    GameObject CoinPrefab;
 
     Renderer rend;
     float laneWidth = 2f;
@@ -66,12 +69,12 @@ public class LaneController : MonoBehaviour
         int numberOFLanes = 3;
         int laneSegments = 3;
         int maxObstacles = 2;
-        
+        int maxCoin = 2;
 
         float spaceBetweemLanes = 0.5f;
         List<Lane> lanes = new List<Lane>();
-        
         List<GameObject> Obstacles = new List<GameObject>();
+        List<GameObject> Coins = new List<GameObject>();
         for (int x = 0; x < numberOFLanes; ++x)
         {
             Lane lane = new Lane();
@@ -95,9 +98,21 @@ public class LaneController : MonoBehaviour
              Obstacle.transform.position += Vector3.forward * (laneLength / 2);
              Obstacles.Add(Obstacle);
         }
+
+        for (int i = 0; i < maxCoin; ++i)
+        {
+            GameObject Coin = Instantiate(CoinPrefab);
+            Coin.transform.position = startPosition;
+            Coin.transform.position += Vector3.right * (laneWidth + spaceBetweemLanes) * Random.Range(0, laneSegments - 1);
+            Coin.transform.position += Vector3.forward * Random.Range(0, (laneLength) * (laneSegments - 1) + (laneLength / 2));
+            Coin.transform.position += Vector3.forward * (laneLength / 2);
+            Coins.Add(Coin);
+        }
+
         levelSegment levelSegment = new levelSegment();
         levelSegment.lanes = lanes;
         levelSegment.Obsecles = Obstacles;
+        levelSegment.Coin = Coins;
         levelSegments.Add(levelSegment);
     }
 
@@ -106,6 +121,8 @@ public class LaneController : MonoBehaviour
         int numberOFLanes = 3;
         int laneSegments = 3;
         int maxObstacles = 2;
+        int maxCoin = 2;
+
         float spaceBetweemLanes = 0.5f;
         for (int x = 0; x < numberOFLanes; ++x)
         {
@@ -129,6 +146,15 @@ public class LaneController : MonoBehaviour
             Obstacle.transform.position += Vector3.forward * (laneLength / 2);
             levelSegments[levelSegments.Count - 1].Obsecles.Add(Obstacle);
         }
+        for (int i = 0; i < maxCoin; ++i)
+        {
+            GameObject Coin = Instantiate(CoinPrefab);
+            Coin.transform.position = startPosition;
+            Coin.transform.position += Vector3.right * (laneWidth + spaceBetweemLanes) * Random.Range(0, laneSegments - 1);
+            Coin.transform.position += Vector3.forward * Random.Range(0, (laneLength) * (laneSegments - 1) + (laneLength / 2));
+            Coin.transform.position += Vector3.forward * (laneLength / 2);
+            levelSegments[levelSegments.Count - 1].Coin.Add(Coin);
+        }
     }
 
     void Destroy()
@@ -148,6 +174,14 @@ public class LaneController : MonoBehaviour
                         {
                             Destroy(levelSegments[levelSegments.Count - 1].Obsecles[z].gameObject);
                             levelSegments[levelSegments.Count - 1].Obsecles.Remove(levelSegments[levelSegments.Count - 1].Obsecles[z]);
+                        }
+                        if (LaneLong > levelSegments[levelSegments.Count - 1].Coin[z].transform.position.z)
+                        {
+                            if (levelSegments[levelSegments.Count - 1].Coin[z].gameObject)
+                            {
+                                Destroy(levelSegments[levelSegments.Count - 1].Coin[z].gameObject);
+                            }
+                            levelSegments[levelSegments.Count - 1].Coin.Remove(levelSegments[levelSegments.Count - 1].Coin[z]);
                         }
                     }
                 }
