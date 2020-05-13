@@ -9,17 +9,63 @@ public class PlayerAnimation : MonoBehaviour
 
     private CharacterController characterController;
     private Animator animator;
+    private Player player;
+
+    private Dictionary<string, float> animationLengthDictionary = new Dictionary<string, float>();
 
     private void Awake()
     {
+        player = GetComponent<Player>();
         characterController = GetComponent<CharacterController>();
         animator = GetComponentInChildren<Animator>();
+
+        player.OnJump += Jump;
+        player.OnAttack += Attack;
+        player.OnHeavyAttack += HeavyAttack;
+
+        foreach (AnimationClip clip in animator.runtimeAnimatorController.animationClips)
+            animationLengthDictionary.Add(clip.name, clip.length);
     }
 
     private void Update()
     {
-        model.transform.forward = characterController.velocity.normalized;
+        bool isJumping = animator.GetBool("IsJumping");
 
-        animator.SetFloat("MoveSpeed", characterController.velocity.magnitude);
+        if (characterController.isGrounded && isJumping)
+            animator.SetBool("IsJumping", false);
+
+        if (characterController.velocity.magnitude > 0.1f)
+        {
+            Vector3 faceDirection = characterController.velocity.normalized;
+            faceDirection.y = 0;
+            model.transform.forward = faceDirection;
+        }
+
+        animator.SetFloat("MoveSpeed", characterController.velocity.magnitude / player.MoveSpeed);
+    }
+
+    private void Attack()
+    {
+        animator.SetTrigger("Attack");
+        StartCoroutine(AttackAnimation("Attack"));
+    }
+
+    private void HeavyAttack()
+    {
+        animator.SetTrigger("HeavyAttack");
+        StartCoroutine(AttackAnimation("HeavyAttack"));
+    }
+
+    private IEnumerator AttackAnimation(string animationName)
+    {
+        float attackLength = animationLengthDictionary[animationName];
+        yield return new WaitForSeconds(attackLength);
+        player.IsAttacking = false;
+    }
+
+    private void Jump()
+    {
+        animator.SetTrigger("Jump");
+        animator.SetBool("IsJumping", true);
     }
 }

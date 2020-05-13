@@ -4,11 +4,17 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public event System.Action OnJump;
+    public event System.Action OnAttack;
+    public event System.Action OnHeavyAttack;
+
     [SerializeField]
     Camera cam;
 
     [SerializeField]
     float moveSpeed = 7f;
+
+    public float MoveSpeed { get { return moveSpeed; } }
 
     [SerializeField]
     float jumpHeight = 4f;
@@ -19,6 +25,12 @@ public class Player : MonoBehaviour
     [SerializeField]
     float gravity = 20f;
 
+    private bool isAttacking;
+    public bool IsAttacking { get { return isAttacking; } set { isAttacking = value; } }
+
+    private float damageModifier = 1f;
+    public float DamageModifier { get { return damageModifier; } }
+
     private void Awake()
     {
         characterController = GetComponent<CharacterController>();
@@ -28,19 +40,37 @@ public class Player : MonoBehaviour
     {
         if (characterController.isGrounded)
         {
-            //moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
-
             Vector3 forward = cam.transform.forward.normalized;
             forward.y = 0f;
             Vector3 right = cam.transform.right.normalized;
             right.y = 0f;
-            
-            moveDirection = (forward * Input.GetAxis("Vertical")) + (right * Input.GetAxis("Horizontal"));
 
-            moveDirection *= moveSpeed;
+            moveDirection = Vector3.zero;
+            if (!isAttacking)
+            {
+                moveDirection = (forward * Input.GetAxis("Vertical")) + (right * Input.GetAxis("Horizontal"));
+                moveDirection *= moveSpeed;
+            }
 
             if (Input.GetButtonDown("Jump"))
+            {
+                OnJump?.Invoke();
                 moveDirection.y = jumpHeight;
+            }
+
+            if (Input.GetButtonDown("Attack"))
+            {
+                damageModifier = 1f;
+                isAttacking = true;
+                OnAttack?.Invoke();
+            }
+
+            if (Input.GetButtonDown("HeavyAttack"))
+            {
+                damageModifier = 2f;
+                isAttacking = true;
+                OnHeavyAttack?.Invoke();
+            }
         }
 
         moveDirection.y -= gravity * Time.deltaTime;
