@@ -20,6 +20,7 @@ public class PlayerAnimationController : MonoBehaviour
         player = GetComponent<Player>();
 
         player.OnJump += Jump;
+        player.OnDodge += Dodge;
         player.OnLand += Land;
         player.OnAttack += Attack;
         player.OnHeavyAttack += HeavyAttack;
@@ -47,6 +48,12 @@ public class PlayerAnimationController : MonoBehaviour
         animator.SetTrigger("Jump");
     }
 
+    private void Dodge()
+    {
+        animator.SetTrigger("Dodge");
+        StartCoroutine(DodgeAnimation("Roll"));
+    }
+
     private void Land()
     {
         animator.SetTrigger("Landed");
@@ -71,5 +78,12 @@ public class PlayerAnimationController : MonoBehaviour
         float attackTime = animationLengthDictionary[animationName];
         yield return new WaitForSeconds(attackTime);
         player.IsAttacking = false;
+    }
+
+    private IEnumerator DodgeAnimation(string animationName)
+    {
+        float dodgeTime = animationLengthDictionary[animationName];
+        yield return new WaitForSeconds(dodgeTime);
+        player.SpeedMultiplier = 1.0f;
     }
 }
