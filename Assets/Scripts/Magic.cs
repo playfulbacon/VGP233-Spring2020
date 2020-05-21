@@ -22,8 +22,12 @@ public class Magic : MonoBehaviour
 
     void CastFire(Targetable target)
     {
-        ParticleSystem newFire = Instantiate(fireParticles, target.gameObject.transform.position, fireParticles.transform.rotation);
-        newFire.transform.parent = target.gameObject.transform;
-        newFire.Play();
+        if (player.MP >= 10)
+        {
+            ParticleSystem newFire = Instantiate(fireParticles, target.gameObject.transform.position, fireParticles.transform.rotation);
+            newFire.transform.parent = target.gameObject.transform;
+            newFire.Play();
+            player.MP = player.MP - 10;
+        }
     }
 }

@@ -76,9 +76,12 @@ public class PlayerAnimationController : MonoBehaviour
 
     private void CastFire(Targetable target)
     {
-        animator.SetTrigger("CastFire");
-        player.IsAttacking = true;
-        StartCoroutine(AttackAnimation("CastFire"));
+        if (player.MP >= 10)
+        {
+            animator.SetTrigger("CastFire");
+            player.IsAttacking = true;
+            StartCoroutine(AttackAnimation("CastFire"));
+        }
     }
 
     private IEnumerator AttackAnimation(string animationName)

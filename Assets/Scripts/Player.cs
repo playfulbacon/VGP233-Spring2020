@@ -136,15 +136,19 @@ public class Player : MonoBehaviour
                 OnHeavyAttack?.Invoke();
             }
 
+            // Cast Fire
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
-                if (currentTarget != null)
+                if (!IsAttacking)
                 {
-                    OnCastFire?.Invoke(targets[currentTargetIndex]);
-                }
-                else
-                {
-                    // TODO:: Implement a No Target Message
+                    if (currentTarget != null)
+                    {
+                        OnCastFire?.Invoke(targets[currentTargetIndex]);
+                    }
+                    else
+                    {
+                        // TODO:: Implement a No Target Message
+                    }
                 }
             }
 
