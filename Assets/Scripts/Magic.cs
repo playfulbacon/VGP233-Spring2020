@@ -28,6 +28,7 @@ public class Magic : MonoBehaviour
             newFire.transform.parent = target.gameObject.transform;
             newFire.Play();
             player.MP = player.MP - 10;
+            target.IsOnFire = true;
         }
     }
 }
