@@ -14,6 +14,7 @@ public class Player : MonoBehaviour
     public System.Action OnAttack;
     public System.Action OnHeavyAttack;
     public System.Action OnGetHit;
+    public System.Action<Targetable> OnCastFire;
     public System.Action<Targetable> OnRetarget;
 
     private bool isAttacking;
@@ -62,6 +63,8 @@ public class Player : MonoBehaviour
     List<Targetable> targets = new List<Targetable>();
 
     private int currentTargetIndex = 0;
+
+    private Targetable currentTarget = null;
 
     private void Awake()
     {
@@ -133,22 +136,42 @@ public class Player : MonoBehaviour
                 OnHeavyAttack?.Invoke();
             }
 
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                if (currentTarget != null)
+                {
+                    OnCastFire?.Invoke(targets[currentTargetIndex]);
+                }
+                else
+                {
+                    // TODO:: Implement a No Target Message
+                }
+            }
+
             // Target
             if (Input.GetButtonDown("Target"))
             {
-                Targetable stopTargeting = targets[(currentTargetIndex - 1) % targets.Count];
+                int stopIndex = currentTargetIndex == 0 ? targets.Count - 1 : currentTargetIndex - 1;
+                Targetable stopTargeting = targets[stopIndex];
                 int newTarget = currentTargetIndex;
-                
+
                 while ((targets[newTarget] != stopTargeting) || (targets.Count == 1))
                 {
-                    if (Vector3.Distance(transform.position, targets[(newTarget + 1) % targets.Count].transform.position) < 5.0f)
+                    if (Vector3.Distance(transform.position, targets[(newTarget + 1) % targets.Count].transform.position) < 15.0f)
                     {
                         newTarget = (newTarget + 1) % targets.Count;
                         currentTargetIndex = newTarget;
-                        OnRetarget?.Invoke(targets[currentTargetIndex]);
+                        currentTarget = targets[currentTargetIndex];
+                        OnRetarget?.Invoke(currentTarget);
                         break;
                     }
                     newTarget = (newTarget + 1) % targets.Count;
+
+                    // If only one target, break out after setting
+                    if (targets.Count == 1)
+                    {
+                        break;
+                    }
                 }
             }
         }

@@ -24,6 +24,7 @@ public class PlayerAnimationController : MonoBehaviour
         player.OnLand += Land;
         player.OnAttack += Attack;
         player.OnHeavyAttack += HeavyAttack;
+        player.OnCastFire += CastFire;
 
         foreach (AnimationClip clip in animator.runtimeAnimatorController.animationClips)
         {
@@ -71,6 +72,13 @@ public class PlayerAnimationController : MonoBehaviour
         animator.SetTrigger("HeavyAttack");
         player.IsAttacking = true;
         StartCoroutine(AttackAnimation("ThrustSlash"));
+    }
+
+    private void CastFire(Targetable target)
+    {
+        animator.SetTrigger("CastFire");
+        player.IsAttacking = true;
+        StartCoroutine(AttackAnimation("CastFire"));
     }
 
     private IEnumerator AttackAnimation(string animationName)
