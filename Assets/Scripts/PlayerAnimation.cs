@@ -7,6 +7,9 @@ public class PlayerAnimation : MonoBehaviour
     [SerializeField]
     Transform model;
 
+    [SerializeField]
+    PlayerAnimationEventHandler playerAnimationEventHandler;
+
     private CharacterController characterController;
     private Animator animator;
     private Player player;
@@ -18,10 +21,13 @@ public class PlayerAnimation : MonoBehaviour
         player = GetComponent<Player>();
         characterController = GetComponent<CharacterController>();
         animator = GetComponentInChildren<Animator>();
+        playerAnimationEventHandler.OnStopDodge += ()=> { animator.SetBool("Dodge", false); };
 
+        player.OnMagicAttack += MagicAttack;
         player.OnJump += Jump;
         player.OnAttack += Attack;
         player.OnHeavyAttack += HeavyAttack;
+        player.OnDodge += Dodge;
 
         foreach (AnimationClip clip in animator.runtimeAnimatorController.animationClips)
             animationLengthDictionary.Add(clip.name, clip.length);
@@ -67,5 +73,17 @@ public class PlayerAnimation : MonoBehaviour
     {
         animator.SetTrigger("Jump");
         animator.SetBool("IsJumping", true);
+    }
+
+    private void Dodge()
+    {
+        //animator.SetTrigger("Dodge");
+        animator.SetBool("Dodge", true);
+    }
+
+    private void MagicAttack()
+    {
+        animator.SetTrigger("MagicAttack");
+        StartCoroutine(AttackAnimation("MagicAttack"));
     }
 }
