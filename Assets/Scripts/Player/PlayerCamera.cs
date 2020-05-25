@@ -12,6 +12,7 @@ public class PlayerCamera : MonoBehaviour
     private void Awake()
     {
         player = FindObjectOfType<Player>().transform;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void LateUpdate()

@@ -6,6 +6,13 @@ public class PlayerAnimationEventHandler : MonoBehaviour
 {
     public event System.Action OnStartDamageWindow;
     public event System.Action OnStopDamageWindow;
+    public event System.Action OnMagicCast;
+
+    private void SpellCast()
+    {
+        Debug.Log("Called");
+        OnMagicCast?.Invoke();
+    }
 
     private void StartDamageWindow()
     {

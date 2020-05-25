@@ -8,7 +8,7 @@ public class PlayerWeapon : MonoBehaviour
     PlayerAnimationEventHandler animationEventHandler;
 
     private bool canDamage;
-    private List<Damageable> hitDamageables = new List<Damageable>();
+    private List<EnemyStats> hitDamageables = new List<EnemyStats>();
 
     private void Awake()
     {
@@ -16,15 +16,22 @@ public class PlayerWeapon : MonoBehaviour
         animationEventHandler.OnStopDamageWindow += () => { canDamage = false; hitDamageables.Clear(); };
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        //other.gameObject.GetComponent<EnemyStats>().TakeDamage(FindObjectOfType<PlayerStats>().BaseDamage);
+    }
+
     private void OnTriggerStay(Collider collider)
     {
+
         if (canDamage)
         {
-            Damageable damageable = collider.GetComponent<Damageable>();
+            EnemyStats damageable = collider.GetComponent<EnemyStats>();
 
             if (damageable != null && !hitDamageables.Contains(damageable))
             {
-                damageable.Damage(1f * FindObjectOfType<Player>().DamageModifier);
+                Debug.Log("hit");
+                damageable.TakeDamage(FindObjectOfType<PlayerStats>().BaseDamage * FindObjectOfType<PlayerStats>().DamageModifier);
                 hitDamageables.Add(damageable);
             }
         }
