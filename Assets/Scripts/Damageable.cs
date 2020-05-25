@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Damageable : MonoBehaviour
 {
@@ -9,9 +7,12 @@ public class Damageable : MonoBehaviour
 
     private float health;
 
+    private Renderer RenderColor;
+
     private void Awake()
     {
         health = maxHealth;
+        RenderColor = GetComponentInChildren<Renderer>();
     }
 
     public void Damage(float damage)
@@ -21,6 +22,6 @@ public class Damageable : MonoBehaviour
         if (health <= 0)
             Destroy(gameObject);
 
-        GetComponentInChildren<Renderer>().material.color = Color.Lerp(Color.white, Color.red, health / maxHealth);
+        RenderColor.material.color = Color.Lerp(Color.white, Color.red, health / maxHealth);
     }
 }

@@ -1,39 +1,46 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using System;
 
+[RequireComponent(typeof(Camera))]
 public class Player : MonoBehaviour
 {
-    public event System.Action OnJump;
-    public event System.Action OnAttack;
-    public event System.Action OnHeavyAttack;
+    public event Action OnJump;
+    public event Action OnAttack;
+    public event Action OnHeavyAttack;
+    public event Action OnDodge;
+    public event Action OnCastMagic;
 
-    [SerializeField]
-    Camera cam;
-
-    [SerializeField]
-    float moveSpeed = 7f;
-
-    public float MoveSpeed { get { return moveSpeed; } }
-
-    [SerializeField]
-    float jumpHeight = 4f;
+    [SerializeField] Camera cam;
+    [SerializeField] float moveSpeed = 7f;
+    [SerializeField] float evadeSpeed = 14f;
+    [SerializeField] float gravity = 20f;
+    [SerializeField] float jumpHeight = 4f;
 
     private CharacterController characterController;
-    private Vector3 moveDirection;
-
-    [SerializeField]
-    float gravity = 20f;
-
+    private PlayerHealth playerHealth;
+    public Vector3 moveDirection;
+    public float MoveSpeed { get { return moveSpeed; } set { moveSpeed = value; } }
     private bool isAttacking;
     public bool IsAttacking { get { return isAttacking; } set { isAttacking = value; } }
-
     private float damageModifier = 1f;
     public float DamageModifier { get { return damageModifier; } }
+    public bool IsDodge { get; set; }
+
+    public PlayerHealth PlayerHealth { get { return playerHealth; } }
+
+    private bool doubleJump = false;
+
+    public SpawnProjectiles MagicCast;
+
+    public bool IsMove = true;
 
     private void Awake()
     {
         characterController = GetComponent<CharacterController>();
+        playerHealth = GetComponent<PlayerHealth>();
+
+        MagicCast = GetComponentInChildren<SpawnProjectiles>();
+
     }
 
     private void Update()
@@ -52,12 +59,6 @@ public class Player : MonoBehaviour
                 moveDirection *= moveSpeed;
             }
 
-            if (Input.GetButtonDown("Jump"))
-            {
-                OnJump?.Invoke();
-                moveDirection.y = jumpHeight;
-            }
-
             if (Input.GetButtonDown("Attack"))
             {
                 damageModifier = 1f;
@@ -71,10 +72,49 @@ public class Player : MonoBehaviour
                 isAttacking = true;
                 OnHeavyAttack?.Invoke();
             }
-        }
 
+            if (Input.GetKeyDown(KeyCode.X))
+            {
+                IsDodge = true;
+                OnDodge?.Invoke();
+                moveDirection *= evadeSpeed;
+            }
+
+            if (Input.GetKeyDown(KeyCode.Q))
+            {
+                IsMove = false;
+                OnCastMagic?.Invoke();
+            }
+
+        }
+        DoubleJump();
         moveDirection.y -= gravity * Time.deltaTime;
 
-        characterController.Move(moveDirection * Time.deltaTime);
+        if (IsMove)
+        {
+            characterController.Move(moveDirection * Time.deltaTime);
+        }
     }
+
+    private void DoubleJump()
+    {
+        if (Input.GetButtonDown("Jump"))
+        {
+            if (characterController.isGrounded)
+            {
+                OnJump?.Invoke();
+                moveDirection.y = jumpHeight;
+                doubleJump = true;
+            }
+            else
+            {
+                if (doubleJump)
+                {
+                    OnJump?.Invoke();
+                    moveDirection.y = jumpHeight;
+                }
+            }
+        }
+    }
+
 }

@@ -1,11 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using System;
 
 public class PlayerAnimationEventHandler : MonoBehaviour
 {
-    public event System.Action OnStartDamageWindow;
-    public event System.Action OnStopDamageWindow;
+    public event Action OnStartDamageWindow;
+    public event Action OnStopDamageWindow;
 
     private void StartDamageWindow()
     {

@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerWeapon : MonoBehaviour
@@ -8,10 +7,14 @@ public class PlayerWeapon : MonoBehaviour
     PlayerAnimationEventHandler animationEventHandler;
 
     private bool canDamage;
-    private List<Damageable> hitDamageables = new List<Damageable>();
+    private readonly List<Damageable> hitDamageables = new List<Damageable>();
+
+    private float damageModifier;
 
     private void Awake()
     {
+        damageModifier = FindObjectOfType<Player>().DamageModifier;
+
         animationEventHandler.OnStartDamageWindow += () => { canDamage = true; };
         animationEventHandler.OnStopDamageWindow += () => { canDamage = false; hitDamageables.Clear(); };
     }
@@ -24,7 +27,7 @@ public class PlayerWeapon : MonoBehaviour
 
             if (damageable != null && !hitDamageables.Contains(damageable))
             {
-                damageable.Damage(1f * FindObjectOfType<Player>().DamageModifier);
+                damageable.Damage(1f * damageModifier);
                 hitDamageables.Add(damageable);
             }
         }
