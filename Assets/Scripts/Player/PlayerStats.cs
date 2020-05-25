@@ -50,6 +50,7 @@ public class PlayerStats : MonoBehaviour
 
     public void RestoreStats()
     {
+        isDead = false;
         CurrentHealth = MaxHealth;
         CurrentMana = MaxMana;
         onRevive?.Invoke();
@@ -100,7 +101,10 @@ public class PlayerStats : MonoBehaviour
     private void Dead()
     {
         isDead = true;
+
         CurrentHealth = 0;
+        AudioSource audio = GetComponent<AudioSource>();
+        audio.Play();
         onDeath?.Invoke();
     }
 }

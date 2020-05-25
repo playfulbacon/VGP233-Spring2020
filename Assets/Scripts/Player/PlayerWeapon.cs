@@ -9,11 +9,13 @@ public class PlayerWeapon : MonoBehaviour
 
     private bool canDamage;
     private List<EnemyStats> hitDamageables = new List<EnemyStats>();
-
+    private AudioSource audio;
     private void Awake()
     {
+        audio = GetComponentInChildren<AudioSource>();
         animationEventHandler.OnStartDamageWindow += () => { canDamage = true; };
-        animationEventHandler.OnStopDamageWindow += () => { canDamage = false; hitDamageables.Clear(); };
+        animationEventHandler.OnStopDamageWindow += () => { canDamage = false; hitDamageables.Clear(); audio.Play(); };
+        
     }
 
     private void OnTriggerEnter(Collider other)

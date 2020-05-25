@@ -24,8 +24,9 @@ public class PlayerAnimation : MonoBehaviour
         player.OnJump += Jump;
         player.OnAttack += Attack;
         player.OnHeavyAttack += HeavyAttack;
-        player.onMagicAttack += MagicAttack;
+        player.OnMagicAttack += MagicAttack;
         player.OnDodgeRoll += DodgeRoll;
+        player.OnTaunt += Taunt;
         playerStats.onDeath += Death;
         
 
@@ -82,6 +83,24 @@ public class PlayerAnimation : MonoBehaviour
         animator.SetBool("IsJumping", true);
     }
 
+    private void Taunt()
+    {
+        animator.SetTrigger("Taunt");
+        animator.SetBool("IsTaunting", true);
+        characterController.enabled = false;
+        StartCoroutine(TauntAnimation("Taunt1"));
+    }
+
+    private IEnumerator TauntAnimation(string animationName)
+    {
+        float tauntLength = animationLengthDictionary[animationName];
+        yield return new WaitForSeconds(tauntLength);
+        animator.SetBool("IsTaunting", false);
+        characterController.enabled = true;
+        player.IsTaunting = false;
+
+    }
+
     private void DodgeRoll()
     {
         animator.SetTrigger("Dodge");
@@ -111,8 +130,9 @@ public class PlayerAnimation : MonoBehaviour
         yield return new WaitForSeconds(deathLength);
         model.gameObject.SetActive(false);
         yield return new WaitForSeconds(2f);
-        player.Revive();
+        player.Revive();        
         characterController.enabled = true;
-        model.gameObject.SetActive(true);
+        model.gameObject.SetActive(true);        
+       
     }
 }

@@ -7,9 +7,9 @@ public class Player : MonoBehaviour
     public event System.Action OnJump;
     public event System.Action OnAttack;
     public event System.Action OnHeavyAttack;
-    public event System.Action onMagicAttack;
+    public event System.Action OnMagicAttack;
     public event System.Action OnDodgeRoll;
-    
+    public event System.Action OnTaunt;
     public Transform SpawnPosition;
 
     [SerializeField]
@@ -43,7 +43,8 @@ public class Player : MonoBehaviour
     private bool isDodging;
     public bool IsDodging { get { return isDodging; } set { isDodging = value; } }
 
-
+    private bool isTaunting;
+    public bool IsTaunting { get { return isTaunting; } set { isTaunting = value; } }
     private void Awake()
     {
         characterController = GetComponent<CharacterController>();
@@ -95,7 +96,13 @@ public class Player : MonoBehaviour
                 if (Input.GetButtonDown("MagicAttack"))
                 {
                     isAttacking = true;
-                    onMagicAttack?.Invoke();
+                    OnMagicAttack?.Invoke();
+                }
+
+                if(Input.GetButtonDown("Taunt"))
+                {
+                    IsTaunting = true;
+                    OnTaunt?.Invoke();
                 }
 
             }
