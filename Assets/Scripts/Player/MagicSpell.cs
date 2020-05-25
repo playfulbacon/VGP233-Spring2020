@@ -33,6 +33,7 @@ public class MagicSpell : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        collision.collider.GetComponent<EnemyStats>().TakeDamage(magicDamage);
         Destroy(this.gameObject);
     }
 
