@@ -36,11 +36,6 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
-        foreach (EnemyDamage ed in FindObjectsOfType<EnemyDamage>())
-        {
-            ed.OnStomp += () => Bounce();
-        }
-
         rb = GetComponent<Rigidbody2D>();
     }
     
@@ -77,7 +72,7 @@ public class PlayerController : MonoBehaviour
         rb.AddForce(new Vector2(0, jumpForce));
     }
 
-    private void Bounce()
+    public void Bounce()
     {
         rb.AddForce(new Vector2(0, jumpForce * 1.5f));
     }

@@ -26,11 +26,6 @@ public class Player : MonoBehaviour
 
     private void Awake()
     {
-        foreach (EnemyDamage ed in FindObjectsOfType<EnemyDamage>())
-        {
-            ed.OnPlayerHit += () => TakeDamage();
-        }
-
         rend = GetComponentInChildren<SpriteRenderer>();
         color = rend.color;
         blinkColor = new Color(color.r, color.g, color.b, 0.2f);
@@ -53,7 +48,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    void TakeDamage()
+    public void TakeDamage()
     {
         if (canGetHit)
         {

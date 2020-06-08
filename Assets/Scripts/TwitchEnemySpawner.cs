@@ -26,6 +26,7 @@ public class TwitchEnemySpawner : MonoBehaviour
         if (twitchMessage.ToLower() == twitchMessageToSpawn.ToLower())
         {
             Instantiate(enemyPrefab, new Vector3(player.transform.position.x, player.transform.position.y + 3f, 0f), Quaternion.identity);
+
         }
     }
 }

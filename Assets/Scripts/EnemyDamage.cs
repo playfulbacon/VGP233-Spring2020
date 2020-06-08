@@ -4,9 +4,6 @@ using UnityEngine;
 
 public class EnemyDamage : MonoBehaviour
 {
-    public event System.Action OnStomp;
-    public event System.Action OnPlayerHit;
-
     // ----- Stats -----
 
     [SerializeField]
@@ -31,8 +28,13 @@ public class EnemyDamage : MonoBehaviour
     [SerializeField]
     private LayerMask playerMask;
 
+    private Player player;
+    private PlayerController playerController;
+
     private void Awake()
     {
+        player = FindObjectOfType<Player>();
+        playerController = player.GetComponent<PlayerController>();
         currentHealth = maxHealth;
     }
     
@@ -41,7 +43,7 @@ public class EnemyDamage : MonoBehaviour
         // Head stomp
         if (Physics2D.OverlapBox(headCheck.position, headCheckSize, 0, playerMask))
         {
-            OnStomp?.Invoke();
+            playerController.Bounce();
             currentHealth -= maxHealth;
         }
 
@@ -49,7 +51,7 @@ public class EnemyDamage : MonoBehaviour
         if (Physics2D.OverlapBox(leftCheck.position, sideCheckSize, 0, playerMask) ||
             Physics2D.OverlapBox(rightCheck.position, sideCheckSize, 0, playerMask))
         {
-            OnPlayerHit?.Invoke();
+            player.TakeDamage();
         }
 
         // Death
