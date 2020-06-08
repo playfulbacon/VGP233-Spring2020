@@ -36,8 +36,10 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
-        enemyDamage = FindObjectOfType<EnemyDamage>();
-        enemyDamage.OnStomp += () => Bounce();
+        foreach (EnemyDamage ed in FindObjectsOfType<EnemyDamage>())
+        {
+            ed.OnStomp += () => Bounce();
+        }
 
         rb = GetComponent<Rigidbody2D>();
     }
@@ -62,7 +64,7 @@ public class PlayerController : MonoBehaviour
 
         rb.velocity = Vector2.SmoothDamp(rb.velocity, targetVelocity, ref velocity, movementSmoothing);
 
-        if((isGrounded || jumps < airJumps) && Input.GetKeyDown(KeyCode.Space))
+        if((isGrounded || jumps < airJumps) && Input.GetButtonDown("Jump"))
         {
             rb.AddForce(new Vector2(0, jumpForce));
             jumps++;

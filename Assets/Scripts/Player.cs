@@ -20,17 +20,19 @@ public class Player : MonoBehaviour
     private Color color;
     private Color blinkColor;
 
-    private SpriteRenderer renderer;
+    private SpriteRenderer rend;
 
     private EnemyDamage enemyDamage;
 
     private void Awake()
     {
-        enemyDamage = FindObjectOfType<EnemyDamage>();
-        enemyDamage.OnPlayerHit += () => TakeDamage();
+        foreach (EnemyDamage ed in FindObjectsOfType<EnemyDamage>())
+        {
+            ed.OnPlayerHit += () => TakeDamage();
+        }
 
-        renderer = GetComponentInChildren<SpriteRenderer>();
-        color = renderer.color;
+        rend = GetComponentInChildren<SpriteRenderer>();
+        color = rend.color;
         blinkColor = new Color(color.r, color.g, color.b, 0.2f);
 
         currentHealth = maxHealth;
@@ -62,9 +64,9 @@ public class Player : MonoBehaviour
     }
     private IEnumerator Blink()
     {
-        renderer.color = blinkColor;
+        rend.color = blinkColor;
         yield return new WaitForSeconds(0.1f);
-        renderer.color = color;
+        rend.color = color;
     }
 
     private IEnumerator Invicible()
