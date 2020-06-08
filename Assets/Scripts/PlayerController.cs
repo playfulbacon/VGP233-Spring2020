@@ -66,7 +66,7 @@ public class PlayerController : MonoBehaviour
 
         rb.velocity = Vector2.SmoothDamp(rb.velocity, targetVelocity, ref velocity, movementSmoothing);
 
-        if ((grounded || jumps < doubleJumps) && Input.GetKeyDown(KeyCode.Space))
+        if ((grounded || jumps < doubleJumps) && Input.GetButtonDown("Jump"))
         {
             Jump();
         }
