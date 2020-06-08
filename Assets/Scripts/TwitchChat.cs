@@ -13,7 +13,7 @@ public class TwitchChat : MonoBehaviour
     private int port = 6667;
 
     private System.Threading.Thread inProc, outProc;
-    private string channelName = "andyrbacon";
+    private string channelName = "yoitscrow";
     private Queue<string> commandQueue = new Queue<string>();
     private List<string> receivedMessages = new List<string>();
 
@@ -68,6 +68,11 @@ public class TwitchChat : MonoBehaviour
 
         inProc = new System.Threading.Thread(() => IRCInputProcedure(reader, networkStream));
         inProc.Start();
+    }
+
+    public void CloseConnection()
+    {
+        twitchClient.Close();
     }
 
     private void IRCInputProcedure(TextReader input, NetworkStream networkStream)

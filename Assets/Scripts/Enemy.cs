@@ -19,6 +19,11 @@ public class Enemy : MonoBehaviour
     float speed = 5f;
 
     [SerializeField]
+    float attackDamage = 10f;
+
+    public float Damage { get { return attackDamage; } }
+
+    [SerializeField]
     Transform patrolPointsHolder;
 
     private List<Vector3> patrolPointPositions = new List<Vector3>();
@@ -113,5 +118,10 @@ public class Enemy : MonoBehaviour
         }
 
         state = newState;
+    }
+
+    public void Hurt()
+    {
+        Destroy(this.gameObject);
     }
 }
