@@ -5,10 +5,10 @@ using UnityEngine;
 public class TwitchEnemySpawner : MonoBehaviour
 {
     [SerializeField]
-    string twitchMessageToSpawn = "enemy";
+    private string twitchMessageToSpawn = "enemy";
 
     [SerializeField]
-    GameObject enemyPrefab;
+    private GameObject enemyPrefab = default;
 
     private void Awake()
     {

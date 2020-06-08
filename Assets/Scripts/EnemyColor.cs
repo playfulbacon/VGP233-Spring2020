@@ -1,14 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class EnemyColor : MonoBehaviour
 {
     [SerializeField]
-    SpriteRenderer spriteRenderer;
+    private SpriteRenderer spriteRenderer = default;
 
     [SerializeField]
-    Color chaseColor, patrolColor;
+    private Color chaseColor = default, patrolColor = default;
 
     private void Awake()
     {

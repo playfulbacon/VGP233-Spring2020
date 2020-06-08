@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Net.Sockets;
 using UnityEngine;
@@ -13,7 +12,8 @@ public class TwitchChat : MonoBehaviour
     private int port = 6667;
 
     private System.Threading.Thread inProc, outProc;
-    private string channelName = "andyrbacon";
+    //private string channelName = "andyrbacon";
+    private string channelName = "cyroelros";
     private Queue<string> commandQueue = new Queue<string>();
     private List<string> receivedMessages = new List<string>();
 
@@ -37,10 +37,18 @@ public class TwitchChat : MonoBehaviour
         }
     }
 
+    private void OnDestroy()
+    {
+        outProc.Abort();
+        inProc.Abort();
+        twitchClient.Close();
+    }
+
     private void Connect()
     {
         twitchClient = new TcpClient();
         twitchClient.Connect(server, port);
+        
 
         if (twitchClient.Connected)
         {

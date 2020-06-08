@@ -1,16 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class Enemy : MonoBehaviour
 {
-    public event System.Action OnPatrolStart, OnChaseStart;
+    public event Action OnPatrolStart, OnChaseStart;
 
     private enum State { None, Patrol, Chase };
-    private State state;
 
     [SerializeField]
-    LayerMask enemyVisibleMask;
+    private LayerMask enemyVisibleMask = default;
 
     [SerializeField]
     float sightLength = 5f;
@@ -19,17 +18,22 @@ public class Enemy : MonoBehaviour
     float speed = 5f;
 
     [SerializeField]
-    Transform patrolPointsHolder;
+    private int AttackPower = 10;
 
-    private List<Vector3> patrolPointPositions = new List<Vector3>();
+    [SerializeField]
+    private Transform patrolPointsHolder = default;
+
+    private readonly List<Vector3> patrolPointPositions = new List<Vector3>();
+    private State state;
     private int patrolPointIndex = 0;
     private Transform chaseTarget;
     private Rigidbody2D rb;
 
+    public bool IsStomp { get; set; }
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-
         foreach (Transform child in patrolPointsHolder)
             patrolPointPositions.Add(child.position);
     }
@@ -86,14 +90,21 @@ public class Enemy : MonoBehaviour
 
         switch (state)
         {
-            case State.Patrol: 
-                Patrol(); 
+            case State.Patrol:
+                Patrol();
                 break;
 
-            case State.Chase: 
+            case State.Chase:
                 Chase();
                 break;
         }
+
+        if (IsStomp)
+        {
+            Destroy(gameObject);
+            IsStomp = false;
+        }
+
     }
 
     private void ChangeState(State newState)
@@ -113,5 +124,16 @@ public class Enemy : MonoBehaviour
         }
 
         state = newState;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (!IsStomp)
+        {
+            if (collision.gameObject.CompareTag("Player"))
+            {
+                collision.gameObject.GetComponent<PlayerController>().TakeDamage(AttackPower);
+            }
+        }
     }
 }
