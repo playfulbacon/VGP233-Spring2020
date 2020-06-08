@@ -6,9 +6,11 @@ public class HeadTrigger : MonoBehaviour
 {
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Enemy"))
+        Enemy enemy = collision.GetComponent<Enemy>();
+        //&& transform.position.y -0.5 > enemy.transform.position.y +0.5
+        if (enemy != null )
         {
-            Destroy(collision.gameObject);
+            enemy.KillEnemy();
         }
     }
 }

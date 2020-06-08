@@ -96,6 +96,11 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    public void  KillEnemy()
+    {
+        Destroy(gameObject);
+    }
+
     private void ChangeState(State newState)
     {
         if (newState == state)

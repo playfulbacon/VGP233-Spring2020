@@ -918,7 +918,7 @@ GameObject:
   - component: {fileID: 382562527}
   - component: {fileID: 382562528}
   m_Layer: 9
-  m_Name: GameObject
+  m_Name: KiilEnemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -932,7 +932,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 382562525}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.022, y: 0.021, z: 0}
+  m_LocalPosition: {x: -0.022, y: -0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 568529039}
@@ -963,7 +963,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.02309522, y: -0.61590576}
+  m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -974,7 +974,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.8020415, y: 0.11801529}
+  m_Size: {x: 0.5, y: 0.1}
   m_EdgeRadius: 0
 --- !u!1 &568529036
 GameObject:

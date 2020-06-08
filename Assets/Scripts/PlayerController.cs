@@ -86,7 +86,7 @@ public class PlayerController : MonoBehaviour
         Vector2 targetVelocity = new Vector2(moveDirection * moveSpeed, rb.velocity.y);
 
         rb.velocity = Vector2.SmoothDamp(rb.velocity, targetVelocity, ref velocity, movementSmoothing);
-        if(Input.GetButtonDown("jump"))
+        if(Input.GetButtonDown("Jump"))
         {
            jump();
         }
