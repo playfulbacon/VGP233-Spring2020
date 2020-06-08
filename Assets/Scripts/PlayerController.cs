@@ -26,6 +26,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     int airJumps;
 
+    private EnemyDamage enemyDamage;
+
     private Vector2 velocity = Vector2.zero;
     private float movementSmoothing = 0.01f;
 
@@ -34,6 +36,9 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
+        enemyDamage = FindObjectOfType<EnemyDamage>();
+        enemyDamage.OnStomp += () => Bounce();
+
         rb = GetComponent<Rigidbody2D>();
     }
     
@@ -63,5 +68,15 @@ public class PlayerController : MonoBehaviour
             jumps++;
             OnJump?.Invoke();
         }
+    }
+
+    public void Jump()
+    {
+        rb.AddForce(new Vector2(0, jumpForce));
+    }
+
+    private void Bounce()
+    {
+        rb.AddForce(new Vector2(0, jumpForce * 1.5f));
     }
 }
