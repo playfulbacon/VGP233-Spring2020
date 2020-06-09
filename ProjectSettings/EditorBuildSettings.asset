@@ -4,5 +4,14 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/GameLoader.unity
+    guid: 9724ed74bbc7d8a49ab796c89eef1ddd
+  - enabled: 1
+    path: Assets/Scenes/SceneA.unity
+    guid: 9fc0d4010bbf28b4594072e72b8655ab
+  - enabled: 1
+    path: Assets/DreamForestTree/DemoScene.unity
+    guid: 6dc68697d72e283438f1cd3bd3441279
   m_configObjects: {}
