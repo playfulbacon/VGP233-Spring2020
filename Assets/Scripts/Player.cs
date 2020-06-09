@@ -4,17 +4,16 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField]
-    float speed = 1f;
-
+    // Start is called before the first frame update
     void Start()
     {
-        List<LaneController.Lane> lanes = FindObjectOfType<LaneController>().LevelSegments[0].lanes;
-        transform.position = lanes[lanes.Count / 2].laneSegments[0].transform.position;
+        
     }
 
-    void Update()
+    // Update is called once per frame
+    void FixedUpdate()
     {
-        transform.position += transform.forward * Time.deltaTime * speed;
+        Vector3 moveInput = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+        transform.Translate(moveInput * Time.deltaTime * 10f);
     }
 }
